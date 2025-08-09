@@ -1,19 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FMCSA English Training</title>
-<script>
-// 简单判断：屏幕宽度小于 768px 就跳到手机版
-if (window.innerWidth < 768) {
-    window.location.href = "mobile.html";
-} else {
-    window.location.href = "desktop.html";
-}
-</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FMCSA English Training</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    body{margin:0;font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .tip{height:100vh;display:grid;place-items:center;color:#334155}
+  </style>
 </head>
 <body>
-<p>Loading...</p>
+  <div class="tip">正在为你跳转…</div>
+  <script>
+    (function () {
+      var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      // 根据设备跳到对应版本
+      location.replace(isMobile ? 'mobile.html' : 'desktop.html');
+    })();
+  </script>
+  <noscript>需要启用 JavaScript 才能使用本页面。</noscript>
 </body>
 </html>
