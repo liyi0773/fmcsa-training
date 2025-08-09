@@ -15,7 +15,6 @@
   <script>
     (function () {
       var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      // 根据设备跳到对应版本
       location.replace(isMobile ? 'mobile.html' : 'desktop.html');
     })();
   </script>
