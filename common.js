@@ -1,60 +1,50 @@
-// ====== 访问口令设置 ======
-const allowedPasswords = [
-  "5678", "8922", "0345", "3314", "3334",
-  "8586", "7992", "8655", "7763", "8896"
-];
+/* common.js — FMCSA 英语评估训练公共逻辑 */
 
-// ====== 页面加载时验证密码 ======
-(function passwordCheck() {
-  let pass = prompt("请输入访问口令：");
-  if (!allowedPasswords.includes(pass)) {
-    alert("密码错误，无法访问！");
-    document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>访问被拒绝</h2>";
-    throw new Error("Access Denied");
-  }
-})();
-
-// ====== 搜索功能 ======
-function filterTable(inputId, tableId) {
-  let input = document.getElementById(inputId);
-  let filter = input.value.toLowerCase();
-  let table = document.getElementById(tableId);
-  let trs = table.getElementsByTagName("tr");
-
-  for (let i = 1; i < trs.length; i++) {
-    let tds = trs[i].getElementsByTagName("td");
-    let show = false;
-    for (let td of tds) {
-      if (td.textContent.toLowerCase().includes(filter)) {
-        show = true;
-        break;
-      }
-    }
-    trs[i].style.display = show ? "" : "none";
-  }
-}
-
-// ====== 朗读功能（男声，美式英语） ======
+// 朗读函数：优先男声（en-US）
 function speakText(text) {
-  if (!("speechSynthesis" in window)) {
-    alert("你的浏览器不支持朗读功能");
-    return;
+  if (!text) return;
+
+  // 如果浏览器支持 SpeechSynthesis API
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // 美式英语
+    utterance.rate = 1;       // 语速
+    utterance.pitch = 1;      // 音调
+
+    // 优先找男声
+    const voices = speechSynthesis.getVoices();
+    const maleVoice = voices.find(v =>
+      v.lang === 'en-US' &&
+      /male|man|guy|boy/i.test(v.name)
+    );
+
+    if (maleVoice) {
+      utterance.voice = maleVoice;
+    } else {
+      // 找不到男声就退回第一个 en-US 声音
+      const fallbackVoice = voices.find(v => v.lang === 'en-US');
+      if (fallbackVoice) utterance.voice = fallbackVoice;
+    }
+
+    speechSynthesis.speak(utterance);
+  } else {
+    alert('您的浏览器不支持语音朗读功能。');
   }
-  let utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.pitch = 1; // 音调正常
-  utterance.rate = 1;  // 语速正常
-  utterance.volume = 1; // 最大音量
-
-  // 选择男声
-  let voices = speechSynthesis.getVoices();
-  let maleVoice = voices.find(v => v.lang === "en-US" && /male|David|Guy|Mike|John/i.test(v.name));
-  if (maleVoice) utterance.voice = maleVoice;
-
-  speechSynthesis.speak(utterance);
 }
 
-// Chrome 会延迟加载语音，需要监听
-if (typeof speechSynthesis !== "undefined") {
-  speechSynthesis.onvoiceschanged = () => {};
+// 表格过滤
+function filterTable(inputId, tableId) {
+  const input = document.getElementById(inputId);
+  const filter = input.value.trim().toLowerCase();
+  const table = document.getElementById(tableId);
+  if (!table) return;
+
+  const trs = table.querySelectorAll('tbody tr');
+  trs.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    const match = Array.from(tds).some(td =>
+      td.textContent.toLowerCase().includes(filter)
+    );
+    tr.style.display = match ? '' : 'none';
+  });
 }
