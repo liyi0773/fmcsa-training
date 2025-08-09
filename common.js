@@ -21,19 +21,11 @@ const PREFERRED_VOICES = [
 
 // 异步确保 voices 就绪
 function ensureVoicesReady(cb) {
-  if (!('speechSynthesis' in window)) {
-    cb(false);
-    return;
-  }
+  if (!('speechSynthesis' in window)) { cb(false); return; }
   const tryPick = () => {
     const voices = window.speechSynthesis.getVoices() || [];
-    if (voices.length) {
-      _ttsReady = true;
-      cb(true);
-    } else {
-      // 部分浏览器需要一点时间
-      setTimeout(tryPick, 150);
-    }
+    if (voices.length) { _ttsReady = true; cb(true); }
+    else { setTimeout(tryPick, 150); }
   };
   // 某些环境必须监听该事件
   window.speechSynthesis.onvoiceschanged = () => tryPick();
@@ -42,7 +34,6 @@ function ensureVoicesReady(cb) {
 
 function pickVoice() {
   if (_voiceCache) return _voiceCache;
-
   const voices = window.speechSynthesis.getVoices() || [];
   if (!voices.length) return null;
 
@@ -54,16 +45,13 @@ function pickVoice() {
     );
     if (v) { _voiceCache = v; return v; }
   }
-
   // 2) 尝试找“男声”关键词
   const male = voices.find(v => v.lang === 'en-US' && /male|man|guy|boy|fred|alex/i.test(v.name || ''));
   if (male) { _voiceCache = male; return male; }
-
-  // 3) 退回任意 en-US
+  // 3) 任意 en-US
   const anyEN = voices.find(v => v.lang === 'en-US');
   if (anyEN) { _voiceCache = anyEN; return anyEN; }
-
-  // 4) 最后兜底第一个
+  // 4) 兜底
   _voiceCache = voices[0];
   return _voiceCache;
 }
@@ -75,15 +63,13 @@ function speakText(text) {
     alert('您的浏览器不支持语音朗读功能。');
     return;
   }
-
-  ensureVoicesReady((ok) => {
+  ensureVoicesReady(() => {
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'en-US';
     utter.rate = 0.95;  // 略慢更清晰
     utter.pitch = 1.0;
     const v = pickVoice();
     if (v) utter.voice = v;
-
     // 如果正在读，先清掉队列再读
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utter);
@@ -119,3 +105,62 @@ function filterTable(inputId, tableId) {
 document.addEventListener('DOMContentLoaded', () => {
   ensureVoicesReady(() => {});
 });
+
+/* =======================================================================
+   访问门禁（固定 4 位 PIN，10 个；哈希校验）
+   用法：页面中用 gatedInit(() => { initTables(); ... }) 包住渲染逻辑
+   ======================================================================= */
+const PIN_SESSION_KEY = 'fmcsa_gate_hashes_v1';
+
+// 固定的 10 个 PIN（按你提供的列表）
+const FIXED_PINS = ['5678','8922','0345','3314','3334','8586','7992','8655','7763','8896'];
+
+// 计算 SHA-256 十六进制
+async function sha256Hex(str) {
+  const data = new TextEncoder().encode(str);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// 准备哈希（基于固定 PIN）
+async function ensureGateSecrets() {
+  let hashes = sessionStorage.getItem(PIN_SESSION_KEY);
+  if (hashes) return JSON.parse(hashes);
+  const hashed = await Promise.all(FIXED_PINS.map(p => sha256Hex(p)));
+  sessionStorage.setItem(PIN_SESSION_KEY, JSON.stringify(hashed));
+  return hashed;
+}
+
+// 校验 PIN
+async function verifyPin(pin, hashes) {
+  if (!/^\d{4}$/.test(pin)) return false;
+  const h = await sha256Hex(pin);
+  return hashes.includes(h);
+}
+
+/**
+ * gatedInit：验证通过后执行回调（渲染）
+ * @param {Function} runApp - 通过验证后要执行的渲染逻辑
+ */
+async function gatedInit(runApp) {
+  try {
+    const hashes = await ensureGateSecrets();
+    let ok = false;
+    for (let i = 0; i < 3; i++) {
+      const pin = prompt('请输入 4 位访问密码：');
+      if (pin === null) break;
+      if (await verifyPin(pin, hashes)) { ok = true; break; }
+      alert('密码不正确，请重试。');
+    }
+
+    if (!ok) {
+      document.body.innerHTML = '<div style="display:grid;place-items:center;height:100vh;color:#cbd5e1;font:16px system-ui">未授权访问</div>';
+      return;
+    }
+
+    if (typeof runApp === 'function') runApp();
+  } catch (e) {
+    console.error('门禁初始化失败：', e);
+    document.body.innerHTML = '<div style="display:grid;place-items:center;height:100vh;color:#cbd5e1;font:16px system-ui">系统错误，请刷新重试</div>';
+  }
+}
