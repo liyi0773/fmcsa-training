@@ -1,21 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FMCSA English Training - Mobile</title>
-<script src="data.js"></script>
-<script src="common.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>FMCSA 英语评估训练 · 手机版</title>
 <style>
-body { font-family: Arial, sans-serif; font-size: 16px; padding: 10px; }
-button { font-size: 16px; padding: 5px 10px; }
+  :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0b1220;color:var(--text);font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{position:sticky;top:0;z-index:10;background:#0f1b2e;border-bottom:1px solid var(--line)}
+  .wrap{max-width:800px;margin:0 auto;padding:0 12px}
+  .h-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:10px 0}
+  h1{font-size:16px;margin:0}
+  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px;border-radius:10px}
+  main{padding:14px 0 40px}
+  section{margin:14px 0}
+  h2{font-size:18px;margin:0 0 8px}
+  .small{font-size:12px;color:var(--muted)}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  th,td{padding:9px;border-bottom:1px solid #1a2948}
+  th{background:#0e1a31;text-align:left;font-weight:600}
+  tr:last-child td{border-bottom:none}
+  .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
+  /* 让表格在窄屏下不抖动 */
+  td:nth-child(1){width:38%}
+  td:nth-child(2){width:34%}
+  td:nth-child(3){width:20%}
+  td:nth-child(4){width:8%;text-align:right}
 </style>
 </head>
 <body>
-<h1>Mobile Version</h1>
-<div id="content"></div>
+<header>
+  <div class="wrap h-bar">
+    <h1>FMCSA 英语评估训练 · 手机版</h1>
+    <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" oninput="filterTable('globalSearch','tblEssential');filterTable('globalSearch','tblStates')">
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 必备证件 -->
+  <section id="essential">
+    <h2>必备证件与单据词汇</h2>
+    <table id="tblEssential">
+      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="small">点击🔊仅朗读英文（美式英语，男声优先）。</p>
+  </section>
+
+  <!-- 美国各州 -->
+  <section id="states">
+    <h2>美国各州</h2>
+    <table id="tblStates">
+      <thead><tr><th>State</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<!-- 先数据，再公共逻辑（口令 + 朗读 + 搜索） -->
+<script src="data.js"></script>
+<script src="common.js"></script>
 <script>
-renderAll(true);
+  const safeArr = (a) => Array.isArray(a) ? a : [];
+
+  function renderRows(tbody, rows, readColGetter) {
+    tbody.innerHTML = "";
+    rows.forEach(row => {
+      const en = row.en || "";
+      const cn = row.cn || "";
+      const pr = row.pr || "";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${en}</td>
+        <td>${cn}</td>
+        <td class="small">${pr}</td>
+        <td><button class="btn" onclick="speakText('${(readColGetter?readColGetter(row):en).replace(/'/g,"\\'")}')">🔊</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderRows(document.querySelector('#tblEssential tbody'), safeArr(window.essentialData), r => r.en);
+    renderRows(document.querySelector('#tblStates tbody'), safeArr(window.statesData), r => r.en);
+  });
 </script>
 </body>
 </html>
