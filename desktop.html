@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>华人卡车协会英语评估训练 · 桌面版</title>
-<style>
-  :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
-  *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
-  .wrap{max-width:1200px;margin:0 auto;padding:0 14px}
-  .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
-  .nav h1{margin:0;font-size:18px}
-  .menu{display:flex;gap:10px;flex-wrap:wrap}
-  .menu a{padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#0f1a2e;text-decoration:none;color:#cfe3ff}
-  main{padding:26px 0 60px}
-  section{scroll-margin-top:80px;margin:22px 0}
-  h2{font-size:22px;margin:0 0 10px}
-  .small{font-size:12px;color:var(--muted)}
-  .tools{display:flex;gap:8px;align-items:center}
-  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
-  table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  th,td{padding:10px;border-bottom:1px solid #1a2948;vertical-align:top}
-  th{background:#0e1a31;text-align:left}
-  tr:last-child td{border-bottom:none}
-  .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>华人卡车协会英语评估训练 · 桌面版</title>
+  <!-- 依赖：请确保同目录下有 data.js 与 common.js -->
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <style>
+    :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+    .wrap{max-width:1100px;margin:0 auto;padding:0 14px}
+    .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
+    .nav h1{margin:0;font-size:18px}
+    .menu{display:flex;gap:10px;flex-wrap:wrap}
+    .menu a{padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#0f1a2e;text-decoration:none;color:#cfe3ff}
+    main{padding:26px 0 60px}
+    section{scroll-margin-top:80px;margin:22px 0}
+    h2{font-size:22px;margin:0 0 10px}
+    .small{font-size:12px;color:var(--muted)}
+    .tools{display:flex;gap:8px;align-items:center}
+    input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
+    .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#2563eb,#22c55e);border:none}
+    table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid #1a2948}
+    th{background:#0e1a31;text-align:left}
+    tr:last-child td{border-bottom:none}
+    tbody td:last-child{width:64px;text-align:center}
+    .hint{color:var(--muted);font-size:12px}
+  </style>
 </head>
 <body>
 <header>
   <div class="wrap nav">
     <h1>华人卡车协会英语评估训练 · 桌面版</h1>
     <nav class="menu">
-      <a href="#essential">必备证件</a>
+      <a href="#vocab">必备证件</a>
       <a href="#stop">执法/拦检</a>
       <a href="#ops">运营/行程</a>
       <a href="#inspect">检查与设备</a>
@@ -41,136 +47,132 @@
       <a href="#states">美国各州</a>
     </nav>
     <div class="tools">
-      <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" />
+      <input id="q" type="search" placeholder="搜索英文 / 中文 / 读音…" oninput="globalFilter()" aria-label="搜索所有表格" />
+      <button id="exportBtn" class="btn primary" aria-label="导出当前页面为HTML">导出本页 HTML</button>
     </div>
   </div>
 </header>
 
 <main class="wrap">
   <!-- 必备证件 -->
-  <section id="essential">
+  <section id="vocab">
     <h2>必备证件与单据词汇</h2>
-    <table id="tblEssential">
-      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <p class="small">点击🔊仅朗读英文，发音统一为美式英语（男声优先）。</p>
+    <table id="tblVocab"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
+    <p class="small">注：读音仅作记忆辅助，以 IPA 为准。</p>
   </section>
 
   <!-- 执法/拦检 -->
   <section id="stop">
     <h2>执法/拦检常用词</h2>
-    <table id="tblStop">
-      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblStop"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 
   <!-- 运营/行程 -->
   <section id="ops">
     <h2>运营与行程相关用语</h2>
-    <table id="tblOps">
-      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblOps"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 
   <!-- 检查与设备 -->
   <section id="inspect">
     <h2>检查与设备（Inspection &amp; Equipment）</h2>
-    <table id="tblInspect">
-      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblInspect"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 
   <!-- 维修与部件 -->
   <section id="maint">
     <h2>维修与部件（Maintenance &amp; Parts）</h2>
-    <table id="tblMaint">
-      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblMaint"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 
   <!-- 情景对话 -->
   <section id="dialog">
     <h2>拦检情景对话（Officer – Driver）</h2>
-    <table id="tblDialog">
-      <thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblDialog"><thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 
   <!-- 美国各州 -->
   <section id="states">
     <h2>美国各州（English · 中文 · 读音提示）</h2>
-    <table id="tblStates">
-      <thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="tblStates"><thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table>
   </section>
 </main>
 
-<!-- 数据与公共逻辑（务必保持此顺序：先 data.js 再 common.js） -->
-<script src="data.js"></script>
-<script src="common.js"></script>
 <script>
-  // —— 工具与渲染 —— //
-  const safeArr = a => Array.isArray(a) ? a : [];
-
-  function renderRows4(tbody, rows, readColGetter){
-    tbody.innerHTML = "";
-    safeArr(rows).forEach(row=>{
-      const en = row.en || "", cn = row.cn || "", pr = row.pr || "";
-      const t = document.createElement('tr');
-      t.innerHTML = `
-        <td>${en}</td>
-        <td>${cn}</td>
-        <td class="small">${pr}</td>
-        <td><button class="btn" onclick="speakText('${(readColGetter?readColGetter(row):en).replace(/'/g, "\\'")}')">🔊</button></td>`;
-      tbody.appendChild(t);
-    });
+(function ensureData(){
+  if (!window.FMCSA_DATA){
+    console.error('FMCSA_DATA 未加载，请确认 data.js 已正确引入。');
+    const warn = document.createElement('div');
+    warn.className = 'wrap small';
+    warn.textContent = '⚠️ 数据未加载。请检查 data.js 引用路径。';
+    document.body.prepend(warn);
   }
+})();
 
-  function renderDialog(tbody, rows){
-    tbody.innerHTML = "";
-    safeArr(rows).forEach(row=>{
-      const en = row.en || "", cn = row.cn || "";
-      const t = document.createElement('tr');
-      t.innerHTML = `
-        <td>${en}</td>
-        <td>${cn}</td>
-        <td><button class="btn" onclick="speakText('${en.replace(/'/g, "\\'")}')">🔊</button></td>`;
-      tbody.appendChild(t);
-    });
-  }
-
-  // —— 页面渲染 —— //
-  function hydrate(){
-    renderRows4(document.querySelector('#tblEssential tbody'), window.essentialData, r=>r.en);
-    renderRows4(document.querySelector('#tblStop tbody'),      window.stopData,      r=>r.en);
-    renderRows4(document.querySelector('#tblOps tbody'),       window.opsData,       r=>r.en);
-    renderRows4(document.querySelector('#tblInspect tbody'),   window.inspectData,   r=>r.en);
-    renderRows4(document.querySelector('#tblMaint tbody'),     window.maintData,     r=>r.en);
-    renderDialog(document.querySelector('#tblDialog tbody'),   window.dialogData);
-    renderRows4(document.querySelector('#tblStates tbody'),    window.statesData,    r=>r.en);
-  }
-
-  // —— 全局搜索（对所有表统一过滤） —— //
-  function filterAll(q){
-    const kw = q.trim().toLowerCase();
-    document.querySelectorAll('tbody tr').forEach(tr=>{
-      const show = [...tr.cells].some(td => (td.innerText||'').toLowerCase().includes(kw));
-      tr.style.display = show ? '' : 'none';
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    hydrate();
-    const g = document.getElementById('globalSearch');
-    g.addEventListener('input', e=>filterAll(e.target.value));
+function renderTableRows(tbody, rows, withHint=true){
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const hintCell = withHint ? `<td class="hint">${r.hint||''}</td>` : '';
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${r.en||''}</td>
+        <td>${r.zh||''}</td>
+        ${withHint ? hintCell : ''}
+        <td><button class="btn" aria-label="朗读" onclick="speakText(\`${(r.en||'').replace(/`/g,'\\`')}\`)">🔊</button></td>
+      </tr>`);
   });
+}
+
+function renderDialogRows(tbody, dialogs){
+  tbody.innerHTML = '';
+  dialogs.forEach(d => {
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${d.en}</td>
+        <td>${d.zh}</td>
+        <td><button class="btn" aria-label="朗读" onclick="speakText(\`${d.en.replace(/`/g,'\\`')}\`)">🔊</button></td>
+      </tr>`);
+  });
+}
+
+function initTables(){
+  const D = window.FMCSA_DATA || {};
+  // 词表类
+  if (D.vocab)      renderTableRows(document.querySelector('#tblVocab tbody'),   D.vocab);
+  if (D.stopWords)  renderTableRows(document.querySelector('#tblStop tbody'),    D.stopWords);
+  if (D.opsWords)   renderTableRows(document.querySelector('#tblOps tbody'),     D.opsWords);
+  if (D.inspectWords) renderTableRows(document.querySelector('#tblInspect tbody'), D.inspectWords);
+  if (D.maintWords) renderTableRows(document.querySelector('#tblMaint tbody'),   D.maintWords);
+  // 对话
+  if (D.dialogs)    renderDialogRows(document.querySelector('#tblDialog tbody'), D.dialogs);
+  // 州
+  if (D.states)     renderTableRows(document.querySelector('#tblStates tbody'),  D.states);
+}
+
+// 全局搜索：过滤所有表格
+function globalFilter(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  document.querySelectorAll('table tbody tr').forEach(tr => {
+    const match = [...tr.cells].some(td => (td.innerText||'').toLowerCase().includes(q));
+    tr.style.display = match ? '' : 'none';
+  });
+}
+
+// 导出整页为一个独立 HTML 文件（包含当前渲染结果）
+function bindExport(){
+  const btn = document.getElementById('exportBtn');
+  btn.addEventListener('click', () => {
+    const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'FMCSA-English-Desktop.html'; a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+// 初始渲染
+initTables();
+bindExport();
 </script>
 </body>
 </html>
