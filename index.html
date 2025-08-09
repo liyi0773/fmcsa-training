@@ -1,4 +1,29 @@
 <html lang="zh-CN"><head>
+
+  <!-- 简易口令门（10 个密码）放在最前，确保未验证前不显示内容 -->
+  <style id="gate-style">html.gate body{display:none !important}</style>
+  <script>
+  (function(){
+    document.documentElement.classList.add('gate');
+    const PASSWORDS = new Set(['5678', '8922', '0345', '3314', '3334', '8586', '7992', '8655', '7763', '8896']);
+    const KEY = "__gate_passed__";
+    try{
+      if (sessionStorage.getItem(KEY) === '1') {
+        document.documentElement.classList.remove('gate');
+        return;
+      }
+      const input = (prompt('请输入访问口令（4位数字）：') || '').trim();
+      if (PASSWORDS.has(input)) {
+        sessionStorage.setItem(KEY, '1');
+        document.documentElement.classList.remove('gate');
+        return;
+      }
+      document.write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>访问被拒绝</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto;display:grid;place-items:center;height:100vh;margin:0;background:#0b1220;color:#e6eef9}.card{border:1px solid #1f2a44;border-radius:12px;padding:20px;background:#0f1b2e}</style><div class="card"><h2>访问被拒绝</h2><p>口令错误或已取消输入。</p></div>');
+      document.close();
+    }catch(e){}
+  })();
+  </script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>华人卡车协会 · FMCSA 英语评估训练</title>
@@ -578,57 +603,7 @@ document.getElementById('q').addEventListener('input', e=>{
 });
 
 // 朗读
-
-// ===== Unified TTS voice (fixed across devices) =====
-let _ttsVoice = null;
-const PREFERRED_VOICES = [
-  // Chrome (desktop/mobile)
-  { name: 'Google US English', lang: 'en-US' },
-  // iOS/iPadOS
-  { name: 'Samantha', lang: 'en-US' },
-  { name: 'Aaron', lang: 'en-US' },
-  { name: 'Alex', lang: 'en-US' },
-  // Edge/Windows
-  { name: 'Microsoft Aria', lang: 'en-US' },
-  { name: 'Microsoft Zira', lang: 'en-US' },
-];
-
-function pickVoice() {
-  const voices = speechSynthesis.getVoices() || [];
-  for (const pref of PREFERRED_VOICES) {
-    const v = voices.find(vc =>
-      (vc.name && vc.name.toLowerCase().includes(pref.name.toLowerCase())) ||
-      (pref.lang && vc.lang === pref.lang && vc.name && vc.name.toLowerCase().includes('english'))
-    );
-    if (v) return v;
-  }
-  return voices.find(v => v.lang === 'en-US') || voices[0] || null;
-}
-
-function ensureVoiceReady(cb){
-  const tryPick = () => {
-    if (!_ttsVoice) _ttsVoice = pickVoice();
-    if (_ttsVoice) cb(); else setTimeout(tryPick, 150);
-  };
-  if (speechSynthesis.getVoices().length) tryPick();
-  else {
-    // Some browsers need this event to fire after a tick
-    speechSynthesis.onvoiceschanged = tryPick;
-    setTimeout(tryPick, 200);
-  }
-}
-
-function speak(text){
-  ensureVoiceReady(() => {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    if (_ttsVoice) u.voice = _ttsVoice;
-    u.rate = 0.95; // slightly slower for clarity
-    u.pitch = 1.0;
-    speechSynthesis.speak(u);
-  });
-}
-
+function speak(text){ const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; speechSynthesis.speak(u); }
 function speakRow(btn){ const t = btn.closest('tr').cells[0].innerText; speak(t); }
 
 // 导出整页为单个 HTML 文件
