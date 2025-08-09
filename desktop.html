@@ -24,7 +24,6 @@
     .tools{display:flex;gap:8px;align-items:center}
     input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
     .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
-    .btn.primary{background:linear-gradient(135deg,#2563eb,#22c55e);border:none}
     table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
     th,td{padding:10px;border-bottom:1px solid #1a2948}
     th{background:#0e1a31;text-align:left}
@@ -136,16 +135,13 @@ function renderDialogRows(tbody, dialogs){
 
 function initTables(){
   const D = window.FMCSA_DATA || {};
-  // 词表类
-  if (D.vocab)      renderTableRows(document.querySelector('#tblVocab tbody'),   D.vocab);
-  if (D.stopWords)  renderTableRows(document.querySelector('#tblStop tbody'),    D.stopWords);
-  if (D.opsWords)   renderTableRows(document.querySelector('#tblOps tbody'),     D.opsWords);
+  if (D.vocab)        renderTableRows(document.querySelector('#tblVocab tbody'),   D.vocab);
+  if (D.stopWords)    renderTableRows(document.querySelector('#tblStop tbody'),    D.stopWords);
+  if (D.opsWords)     renderTableRows(document.querySelector('#tblOps tbody'),     D.opsWords);
   if (D.inspectWords) renderTableRows(document.querySelector('#tblInspect tbody'), D.inspectWords);
-  if (D.maintWords) renderTableRows(document.querySelector('#tblMaint tbody'),   D.maintWords);
-  // 对话
-  if (D.dialogs)    renderDialogRows(document.querySelector('#tblDialog tbody'), D.dialogs);
-  // 州
-  if (D.states)     renderTableRows(document.querySelector('#tblStates tbody'),  D.states);
+  if (D.maintWords)   renderTableRows(document.querySelector('#tblMaint tbody'),   D.maintWords);
+  if (D.dialogs)      renderDialogRows(document.querySelector('#tblDialog tbody'), D.dialogs);
+  if (D.states)       renderTableRows(document.querySelector('#tblStates tbody'),  D.states);
 }
 
 // 全局搜索：过滤所有表格
@@ -157,4 +153,8 @@ function globalFilter(){
   });
 }
 
-
+// 通过门禁后再渲染
+gatedInit(initTables);
+</script>
+</body>
+</html>
