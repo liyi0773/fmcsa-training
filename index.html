@@ -1,69 +1,90 @@
+没问题！下面是**完整版·手机版 `index.html`**（已去掉导出功能），特点：
+
+- 手机优先排版（更大触控区、可横向滑动的导航）
+- 统一**美式英语(en-US)** 朗读，只读英文
+- “美国各州”表也有独立🔊，只读州名
+- 内置你给的**10 个四位数口令**（5678, 8922, 0345, 3314, 3334, 8586, 7992, 8655, 7763, 8896）。口令错误直接拦截
+- 全部数据已合并（证件/执法/运营/检查/维修/对话/州名）
+
+把下面整段保存为 `index.html` 并上传到 GitHub Pages 即可：
+
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>华人卡车协会 · FMCSA 英语评估训练（US Voice + 密码）</title>
-
-<!-- 入口口令门（10 个四位数） -->
-<script>
-(function(){
-  const OK = new Set(["5678","8922","0345","3314","3334","8586","7992","8655","7763","8896"]);
-  const hide = document.createElement('style'); hide.textContent = 'html{visibility:hidden}'; document.head.appendChild(hide);
-  const p = prompt("请输入 4 位访问口令：");
-  if(!OK.has(p)){
-    alert("密码错误，无法访问！");
-    document.addEventListener('DOMContentLoaded', ()=>{
-      document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:64px'>访问被拒绝</h2>";
-    });
-    throw new Error("Access Denied");
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>FMCSA 英语评估训练（手机版）</title>
+<style>
+  :root{
+    --bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e;
+    --btn:#2563eb; --btn2:#1e293b;
   }
-  document.head.removeChild(hide);
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .wrap{max-width:980px;margin:0 auto;padding:10px 14px}
+  h1{margin:0;font-size:18px}
+  .nav{display:flex;gap:8px;overflow:auto;padding:8px 0}
+  .chip{white-space:nowrap;border:1px solid var(--line);background:#0f1a2e;color:#cfe3ff;border-radius:999px;padding:6px 10px;text-decoration:none;font-size:14px}
+  .tools{display:flex;gap:8px;margin:8px 0}
+  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
+  main{padding:10px 0 50px}
+  section{scroll-margin-top:84px;margin:14px 0}
+  h2{font-size:18px;margin:6px 0 8px}
+  .small{font-size:12px;color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:separate;border-spacing:0}
+  th,td{padding:10px;border-bottom:1px solid #1a2948;vertical-align:middle}
+  th{background:#0e1a31;text-align:left;font-weight:600;font-size:13px}
+  tr:last-child td{border-bottom:none}
+  .btn{border:1px solid var(--line);background:var(--btn2);color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer;font-size:14px}
+  .btn.spk{background:var(--btn);border:none}
+  .grid{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:640px){ .grid{grid-template-columns:1fr 1fr} }
+  @media(min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+  .muted{color:var(--muted)}
+  /* 行内按钮更易点按 */
+  .sbtn{display:inline-flex;align-items:center;justify-content:center;padding:6px 9px;border-radius:10px;border:1px solid var(--line);background:#143055}
+  .sbtn.spk{background:var(--btn);border:none}
+</style>
+
+<script>
+/* ===== 简易口令门（10 个四位数）——放在 <head> 提前执行 ===== */
+(function(){
+  const passwords = ["5678","8922","0345","3314","3334","8586","7992","8655","7763","8896"];
+  const key = sessionStorage.getItem("gate_ok");
+  if(key!=="1"){
+    const pass = prompt("请输入访问口令：");
+    if(!passwords.includes((pass||"").trim())){
+      document.documentElement.innerHTML =
+        "<body style='margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#0b1220;color:#fff;font:16px system-ui'>" +
+        "<div style='text-align:center'><div style='font-size:22px;margin-bottom:8px'>访问被拒绝</div><div class='muted'>口令错误</div></div></body>";
+      throw new Error("Access Denied");
+    }else{
+      sessionStorage.setItem("gate_ok","1");
+    }
+  }
 })();
 </script>
-
-<style>
-  :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
-  *{box-sizing:border-box}
-  body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 14px}
-  .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
-  .nav h1{margin:0;font-size:18px}
-  .menu{display:flex;gap:10px;flex-wrap:wrap}
-  .menu a{padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#0f1a2e;text-decoration:none;color:#cfe3ff}
-  main{padding:26px 0 60px}
-  section{scroll-margin-top:80px;margin:22px 0}
-  h2{font-size:22px;margin:0 0 10px}
-  .small{font-size:12px;color:var(--muted)}
-  .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
-  .btn.primary{background:linear-gradient(135deg,#2563eb,#22c55e);border:none}
-  .tools{display:flex;gap:8px;align-items:center}
-  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
-  .table-wrap{overflow-x:auto;border-radius:16px}
-  table{width:100%;min-width:620px;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  th,td{padding:10px;border-bottom:1px solid #1a2948;vertical-align:top}
-  th{background:#0e1a31;text-align:left}
-  tr:last-child td{border-bottom:none}
-  @media (max-width:640px){ table{min-width:540px} .btn{padding:6px 10px} }
-</style>
 </head>
+
 <body>
 <header>
-  <div class="wrap nav">
-    <h1>华人卡车协会 · FMCSA 英语评估训练</h1>
-    <nav class="menu">
-      <a href="#vocab">必备证件</a>
-      <a href="#stop">执法/拦检用语</a>
-      <a href="#ops">运营/行程用语</a>
-      <a href="#inspect">检查与设备</a>
-      <a href="#maint">维修与部件</a>
-      <a href="#dialog">情景对话</a>
-      <a href="#states">美国各州</a>
-    </nav>
+  <div class="wrap">
+    <h1>FMCSA 英语评估训练（手机版）</h1>
+    <div class="nav">
+      <a class="chip" href="#vocab">必备证件</a>
+      <a class="chip" href="#stop">执法/拦检用语</a>
+      <a class="chip" href="#ops">运营/行程用语</a>
+      <a class="chip" href="#inspect">检查与设备</a>
+      <a class="chip" href="#maint">维修与部件</a>
+      <a class="chip" href="#dialog">情景对话</a>
+      <a class="chip" href="#states">美国各州</a>
+    </div>
     <div class="tools">
-      <input id="q" type="search" placeholder="搜索英文/中文/读音…">
-      <button id="exportBtn" class="btn primary">导出本页 HTML</button>
+      <input id="q" type="search" placeholder="搜英文/中文/读音…" />
+      <button id="clearBtn" class="btn">清除</button>
     </div>
   </div>
 </header>
@@ -71,44 +92,55 @@
 <main class="wrap">
   <section id="vocab">
     <h2>必备证件与单据词汇</h2>
-    <div class="table-wrap"><table id="tblVocab"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
-    <p class="small">IPA 音标以练准发音为主，中文提示仅便于记忆。</p>
+    <div class="card">
+      <table id="tblVocab">
+        <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="small">注：读音按钮统一使用美式英语(en-US)，仅朗读英文。</p>
   </section>
 
   <section id="stop">
     <h2>执法/拦检常用词</h2>
-    <div class="table-wrap"><table id="tblStop"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="tblStop">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="ops">
     <h2>运营与行程相关用语</h2>
-    <div class="table-wrap"><table id="tblOps"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="tblOps">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="inspect">
     <h2>检查与设备（Inspection &amp; Equipment）</h2>
-    <div class="table-wrap"><table id="tblInspect"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="tblInspect">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="maint">
     <h2>维修与部件（Maintenance &amp; Parts）</h2>
-    <div class="table-wrap"><table id="tblMaint"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="tblMaint">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="dialog">
     <h2>拦检情景对话（Officer – Driver）</h2>
-    <div class="table-wrap"><table id="tblDialog"><thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="tblDialog">
+      <thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="states">
     <h2>美国各州（English · 中文 · 读音提示）</h2>
-    <div class="table-wrap"><table id="stateTbl"><thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
+    <div class="card"><table id="stateTbl">
+      <thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 </main>
 
 <script>
-// ===== 数据 =====
-const vocab=[
+/* ===== 数据 ===== */
+const vocab = [
   {en:'License', zh:'驾照', hint:'/ˈlaɪsns/ 来森斯'},
   {en:'Registration', zh:'（车辆）注册', hint:'/ˌredʒɪˈstreɪʃən/ 瑞吉斯崔申'},
   {en:"CDL (Commercial Driver’s License)", zh:'商业驾驶执照', hint:'C-D-L'},
@@ -120,7 +152,8 @@ const vocab=[
   {en:'Bill of Lading (BOL)', zh:'提货单', hint:'比尔-莱丁'},
   {en:'IFTA (International Fuel Tax Agreement)', zh:'国际燃油税协议', hint:'伊芙塔'}
 ];
-const stopWords=[
+
+const stopWords = [
   {en:'Citation', zh:'罚单/传票', hint:'赛泰申'},
   {en:'Warning', zh:'警告', hint:'窝宁'},
   {en:'Destination', zh:'目的地', hint:'德斯提内申'},
@@ -137,7 +170,8 @@ const stopWords=[
   {en:'Step out', zh:'下车', hint:'斯泰普 奥特'},
   {en:'Vehicle', zh:'车辆', hint:'维诶克尔'}
 ];
-const opsWords=[
+
+const opsWords = [
   {en:'How long', zh:'多久', hint:'豪 隆'},
   {en:'Driving', zh:'驾驶', hint:'德赖维'},
   {en:'Hauling', zh:'（卡车）运输', hint:'霍林'},
@@ -148,7 +182,8 @@ const opsWords=[
   {en:'Out of Service', zh:'停止服务/停运', hint:'奥特 夫 瑟维斯'},
   {en:'Report', zh:'报告', hint:'瑞波特'}
 ];
-const inspectWords=[
+
+const inspectWords = [
   {en:'Annual Inspection', zh:'年度检验', hint:'安纽欧 因斯佩克申'},
   {en:'Inspection', zh:'检查', hint:'因斯佩克申'},
   {en:'Brakes', zh:'刹车', hint:'布瑞克斯'},
@@ -170,7 +205,7 @@ const inspectWords=[
   {en:'Horn', zh:'喇叭', hint:'霍恩'},
   {en:'Bridge', zh:'桥梁', hint:'布瑞吉'},
   {en:'Level 1 Inspection', zh:'一级检验', hint:'勒伏弯 因斯佩克申'},
-  {en:'Permit', zh:'通行证/许可', zh2:'', hint:'珀米特'},
+  {en:'Permit', zh:'通行证/许可', hint:'珀米特'},
   {en:'Fine', zh:'罚款', hint:'fain'},
   {en:'Emergency Kit', zh:'应急工具包', hint:'一么真西 克特'},
   {en:'Reflector Triangle', zh:'三角反光牌', hint:'瑞弗莱克特 差伊昂格'},
@@ -178,7 +213,8 @@ const inspectWords=[
   {en:'Safety Vest', zh:'安全背心', hint:'塞夫提 维斯特'},
   {en:'First Aid Kit', zh:'急救包', hint:'佛斯特 埃德 克特'}
 ];
-const maintWords=[
+
+const maintWords = [
   {en:'Mechanic', zh:'修理工/机修', hint:'么开尼克'},
   {en:'Repair', zh:'维修', hint:'瑞佩尔'},
   {en:'Tool', zh:'工具', hint:'突欧'},
@@ -196,7 +232,8 @@ const maintWords=[
   {en:'Warning light', zh:'警示灯', hint:'窝宁 赖特'},
   {en:'Radiator', zh:'散热器', hint:'瑞迪耶特'}
 ];
-const dialogs=[
+
+const dialogs = [
   {en:"1. Can I have your CDL, registration, insurance, and medical card, please?", zh:"请出示你的商业驾照、车辆注册、保险、健康证。"},
   {en:"2. Can you show me your ELD or logbook?", zh:"请出示你的电子记录设备或驾驶日志。"},
   {en:"3. What are you hauling, and where are you headed?", zh:"你在运什么货物，目的地是哪里？"},
@@ -213,7 +250,8 @@ const dialogs=[
   {en:"14. I’m issuing a citation for the brake light.", zh:"我会因为刹车灯问题开一张罚单。"},
   {en:"15. Alright, drive safely and have a good day.", zh:"好的，安全驾驶，祝你一天愉快。"}
 ];
-const states=[
+
+const states = [
   {en:'Alabama', zh:'阿拉巴马州', hint:'埃拉巴马'},
   {en:'Alaska', zh:'阿拉斯加州', hint:'阿拉斯加'},
   {en:'Arizona', zh:'亚利桑那州', hint:'艾瑞佐那'},
@@ -266,16 +304,19 @@ const states=[
   {en:'Wyoming', zh:'怀俄明州', hint:'外俄明'}
 ];
 
-// ===== 渲染 =====
-function renderTable(id, data){
-  const tbody = document.querySelector(id+' tbody');
+/* ===== 渲染表格 ===== */
+function renderTable(sel, data){
+  const tbody = document.querySelector(sel+' tbody');
   tbody.innerHTML = '';
   data.forEach(row=>{
-    const safeEn = (row.en||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    tbody.insertAdjacentHTML('beforeend',`<tr>
-      <td>${row.en}</td><td>${row.zh||''}</td><td class="small">${row.hint||''}</td>
-      <td><button class="btn" onclick="speakText('${safeEn}')">🔊</button></td>
-    </tr>`);
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${row.en}</td>
+        <td>${row.zh || ''}</td>
+        <td class="small">${row.hint || ''}</td>
+        <td><button class="sbtn spk" onclick="speakText('${(row.en||'').replace(/["'\\]/g, m=>({'"':'&quot;',"'":'&#39;','\\':'\\\\'}[m]))}')">🔊</button></td>
+      </tr>
+    `);
   });
 }
 renderTable('#tblVocab', vocab);
@@ -284,74 +325,78 @@ renderTable('#tblOps', opsWords);
 renderTable('#tblInspect', inspectWords);
 renderTable('#tblMaint', maintWords);
 
-// 对话
+/* 情景对话 */
 (function(){
   const tb = document.querySelector('#tblDialog tbody');
+  tb.innerHTML = '';
   dialogs.forEach(d=>{
-    const t = d.en.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    tb.insertAdjacentHTML('beforeend', `<tr>
-      <td>${d.en}</td><td>${d.zh}</td>
-      <td><button class="btn" onclick="speakText('${t}')">🔊</button></td>
-    </tr>`)
-  })
+    tb.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${d.en}</td>
+        <td>${d.zh}</td>
+        <td><button class="sbtn spk" onclick="speakText('${d.en.replace(/["'\\]/g, m=>({'"':'&quot;',"'":'&#39;','\\':'\\\\'}[m]))}')">🔊</button></td>
+      </tr>
+    `);
+  });
 })();
 
-// 州（只读英文）
+/* 州表：只朗读英文州名 */
 (function(){
   const tb = document.querySelector('#stateTbl tbody');
+  tb.innerHTML = '';
   states.forEach(s=>{
-    const t = s.en.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    tb.insertAdjacentHTML('beforeend', `<tr>
-      <td>${s.en}</td><td>${s.zh}</td><td class="small">${s.hint||''}</td>
-      <td><button class="btn" onclick="speakText('${t}')">🔊</button></td>
-    </tr>`);
-  })
+    const enSafe = s.en.replace(/["'\\]/g, m=>({'"':'&quot;',"'":'&#39;','\\':'\\\\'}[m]));
+    tb.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${s.en}</td><td>${s.zh}</td><td class="small">${s.hint||''}</td>
+        <td><button class="sbtn spk" onclick="speakText('${enSafe}')">🔊</button></td>
+      </tr>
+    `);
+  });
 })();
 
-// 搜索（全局过滤）
-document.getElementById('q').addEventListener('input', e=>{
-  const q = e.target.value.trim().toLowerCase();
+/* 全局搜索（对所有表格生效） */
+const q = document.getElementById('q');
+q.addEventListener('input', ()=>{
+  const val = q.value.toLowerCase().trim();
   document.querySelectorAll('tbody tr').forEach(tr=>{
-    tr.style.display = [...tr.cells].some(td=> td.innerText.toLowerCase().includes(q)) ? '' : 'none';
+    const hit = [...tr.cells].some(td=> (td.innerText||'').toLowerCase().includes(val));
+    tr.style.display = hit ? '' : 'none';
   });
 });
+document.getElementById('clearBtn').onclick = ()=>{ q.value=''; q.dispatchEvent(new Event('input')); };
 
-// ===== 固定美式英文人声 =====
+/* ===== 统一美式英文 TTS ===== */
 let _ttsVoice = null;
-const PREFERRED_VOICES = [
-  { name: 'Google US English', lang: 'en-US' },
-  { name: 'Samantha', lang: 'en-US' }, { name: 'Aaron', lang: 'en-US' }, { name: 'Alex', lang: 'en-US' },
-  { name: 'Microsoft Aria', lang: 'en-US' }, { name: 'Microsoft Zira', lang: 'en-US' },
-];
-function pickVoice(){
+function pickEnUS(){
   const voices = speechSynthesis.getVoices() || [];
-  for(const pref of PREFERRED_VOICES){
-    const v = voices.find(vc => (vc.name && vc.name.toLowerCase().includes(pref.name.toLowerCase())) ||
-      (pref.lang && vc.lang === pref.lang && vc.name && vc.name.toLowerCase().includes('english')));
+  const pref = ['Google US English','Samantha','Alex','Aaron','Microsoft Aria','Microsoft Zira'];
+  for(const name of pref){
+    const v = voices.find(x => x.name && x.name.toLowerCase().includes(name.toLowerCase()));
     if(v) return v;
   }
   return voices.find(v => v.lang === 'en-US') || voices[0] || null;
 }
 function ensureVoice(cb){
-  const tryPick = () => { if(!_ttsVoice) _ttsVoice = pickVoice(); if(_ttsVoice) cb(); else setTimeout(tryPick,150); };
-  if (speechSynthesis.getVoices().length) tryPick();
+  const tryPick = ()=>{
+    if(!_ttsVoice) _ttsVoice = pickEnUS();
+    if(_ttsVoice) cb(); else setTimeout(tryPick,150);
+  };
+  if(speechSynthesis.getVoices().length) tryPick();
   else { speechSynthesis.onvoiceschanged = tryPick; setTimeout(tryPick,200); }
 }
 function speakText(text){
   ensureVoice(()=>{
     const u = new SpeechSynthesisUtterance(text);
-    u.lang='en-US'; if(_ttsVoice) u.voice=_ttsVoice; u.rate=0.95; u.pitch=1.0;
+    u.lang = 'en-US';
+    if(_ttsVoice) u.voice = _ttsVoice;
+    u.rate = 0.95; u.pitch = 1.0;
     speechSynthesis.speak(u);
   });
 }
-
-// 导出整页为单个 HTML 文件
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'FMCSA-English-Training.html'; a.click();
-  URL.revokeObjectURL(url);
-});
 </script>
 </body>
 </html>
+```
+
+需要我把这个文件直接推到你的仓库 `fmcsa-training` 里，替换成手机版主页吗？如果愿意，我也能再做个**桌面/手机版自动切换**的双版本。
