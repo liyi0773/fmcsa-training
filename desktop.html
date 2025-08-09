@@ -9,7 +9,7 @@
   *{box-sizing:border-box}
   body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
   header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 14px}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 14px}
   .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
   .nav h1{margin:0;font-size:18px}
   .menu{display:flex;gap:10px;flex-wrap:wrap}
@@ -21,7 +21,7 @@
   .tools{display:flex;gap:8px;align-items:center}
   input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
   table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  th,td{padding:10px;border-bottom:1px solid #1a2948}
+  th,td{padding:10px;border-bottom:1px solid #1a2948;vertical-align:top}
   th{background:#0e1a31;text-align:left}
   tr:last-child td{border-bottom:none}
   .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
@@ -33,10 +33,15 @@
     <h1>FMCSA 英语评估训练 · 桌面版</h1>
     <nav class="menu">
       <a href="#essential">必备证件</a>
+      <a href="#stop">执法/拦检</a>
+      <a href="#ops">运营/行程</a>
+      <a href="#inspect">检查与设备</a>
+      <a href="#maint">维修与部件</a>
+      <a href="#dialog">情景对话</a>
       <a href="#states">美国各州</a>
     </nav>
     <div class="tools">
-      <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" oninput="filterTable('globalSearch','tblEssential');filterTable('globalSearch','tblStates')" />
+      <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" />
     </div>
   </div>
 </header>
@@ -50,6 +55,51 @@
       <tbody></tbody>
     </table>
     <p class="small">点击🔊仅朗读英文，发音统一为美式英语（男声优先）。</p>
+  </section>
+
+  <!-- 执法/拦检 -->
+  <section id="stop">
+    <h2>执法/拦检常用词</h2>
+    <table id="tblStop">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 运营/行程 -->
+  <section id="ops">
+    <h2>运营与行程相关用语</h2>
+    <table id="tblOps">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 检查与设备 -->
+  <section id="inspect">
+    <h2>检查与设备（Inspection &amp; Equipment）</h2>
+    <table id="tblInspect">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 维修与部件 -->
+  <section id="maint">
+    <h2>维修与部件（Maintenance &amp; Parts）</h2>
+    <table id="tblMaint">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 情景对话 -->
+  <section id="dialog">
+    <h2>拦检情景对话（Officer – Driver）</h2>
+    <table id="tblDialog">
+      <thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
   </section>
 
   <!-- 美国各州 -->
@@ -66,35 +116,60 @@
 <script src="data.js"></script>
 <script src="common.js"></script>
 <script>
-  // 安全取值
-  const safeArr = (a) => Array.isArray(a) ? a : [];
+  // —— 工具与渲染 —— //
+  const safeArr = a => Array.isArray(a) ? a : [];
 
-  function renderRows(tbody, rows, readColGetter) {
+  function renderRows4(tbody, rows, readColGetter){
     tbody.innerHTML = "";
-    rows.forEach(row => {
-      const en = row.en || "";
-      const cn = row.cn || "";
-      const pr = row.pr || "";
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
+    safeArr(rows).forEach(row=>{
+      const en = row.en || "", cn = row.cn || "", pr = row.pr || "";
+      const t = document.createElement('tr');
+      t.innerHTML = `
         <td>${en}</td>
         <td>${cn}</td>
         <td class="small">${pr}</td>
-        <td><button class="btn" onclick="speakText('${(readColGetter?readColGetter(row):en).replace(/'/g, "\\'")}')">🔊</button></td>
-      `;
-      tbody.appendChild(tr);
+        <td><button class="btn" onclick="speakText('${(readColGetter?readColGetter(row):en).replace(/'/g, "\\'")}')">🔊</button></td>`;
+      tbody.appendChild(t);
     });
   }
 
-  // 页面渲染
-  document.addEventListener('DOMContentLoaded', () => {
-    // 必备证件
-    const essential = safeArr(window.essentialData);
-    renderRows(document.querySelector('#tblEssential tbody'), essential, r => r.en);
+  function renderDialog(tbody, rows){
+    tbody.innerHTML = "";
+    safeArr(rows).forEach(row=>{
+      const en = row.en || "", cn = row.cn || "";
+      const t = document.createElement('tr');
+      t.innerHTML = `
+        <td>${en}</td>
+        <td>${cn}</td>
+        <td><button class="btn" onclick="speakText('${en.replace(/'/g, "\\'")}')">🔊</button></td>`;
+      tbody.appendChild(t);
+    });
+  }
 
-    // 州表：按钮只读英文州名
-    const states = safeArr(window.statesData);
-    renderRows(document.querySelector('#tblStates tbody'), states, r => r.en);
+  // —— 页面渲染 —— //
+  function hydrate(){
+    renderRows4(document.querySelector('#tblEssential tbody'), window.essentialData, r=>r.en);
+    renderRows4(document.querySelector('#tblStop tbody'),      window.stopData,      r=>r.en);
+    renderRows4(document.querySelector('#tblOps tbody'),       window.opsData,       r=>r.en);
+    renderRows4(document.querySelector('#tblInspect tbody'),   window.inspectData,   r=>r.en);
+    renderRows4(document.querySelector('#tblMaint tbody'),     window.maintData,     r=>r.en);
+    renderDialog(document.querySelector('#tblDialog tbody'),   window.dialogData);
+    renderRows4(document.querySelector('#tblStates tbody'),    window.statesData,    r=>r.en);
+  }
+
+  // —— 全局搜索（对所有表统一过滤） —— //
+  function filterAll(q){
+    const kw = q.trim().toLowerCase();
+    document.querySelectorAll('tbody tr').forEach(tr=>{
+      const show = [...tr.cells].some(td => (td.innerText||'').toLowerCase().includes(kw));
+      tr.style.display = show ? '' : 'none';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    hydrate();
+    const g = document.getElementById('globalSearch');
+    g.addEventListener('input', e=>filterAll(e.target.value));
   });
 </script>
 </body>
