@@ -102,21 +102,21 @@ window.FMCSA_DATA = {
 
   // 拦检情景对话
   dialogs: [
-    {en:"1. Can I have your CDL, registration, insurance, and medical card, please?", zh:"请出示你的商业驾照、车辆注册、保险、健康证。"},
-    {en:"2. Can you show me your ELD or logbook?", zh:"请出示你的电子记录设备或驾驶日志。"},
-    {en:"3. What are you hauling, and where are you headed?", zh:"你在运什么货物，目的地是哪里？"},
-    {en:"4. Where did you come from today?", zh:"今天你从哪里出发？"},
-    {en:"5. How long have you been driving today?", zh:"今天你开了多久？"},
-    {en:"6. Have you had your break/rest time today?", zh:"你今天有按规定休息吗？"},
-    {en:"7. How much does your load weigh?", zh:"你的货物总重是多少？"},
-    {en:"8. Are you carrying any hazardous materials?", zh:"有任何危险品吗？"},
-    {en:"9. Can I have your bill of lading?", zh:"请出示提货单。"},
-    {en:"10. Did you do pre-trip inspection today?", zh:"你今天做了行车前车检了吗？"},
-    {en:"11. I’ll need to inspect the vehicle. Can you step out?", zh:"我需要检查车辆，请下车。"},
-    {en:"12. I’m going to have you perform level II inspection.", zh:"请做二级车检。"},
-    {en:"13. Everything checks out, but one of your brake lights is out. You’ll need to fix that before you continue.", zh:"检查都合格，但你的一个刹车灯坏了，需要修好才能继续行驶。"},
-    {en:"14. I’m issuing a citation for the brake light.", zh:"我会因为刹车灯问题开一张罚单。"},
-    {en:"15. Alright, drive safely and have a good day.", zh:"好的，安全驾驶，祝你一天愉快。"}
+    {en:" Can I have your CDL, registration, insurance, and medical card, please?", zh:"请出示你的商业驾照、车辆注册、保险、健康证。"},
+    {en:" Can you show me your ELD or logbook?", zh:"请出示你的电子记录设备或驾驶日志。"},
+    {en:" What are you hauling, and where are you headed?", zh:"你在运什么货物，目的地是哪里？"},
+    {en:" Where did you come from today?", zh:"今天你从哪里出发？"},
+    {en:" How long have you been driving today?", zh:"今天你开了多久？"},
+    {en:" Have you had your break/rest time today?", zh:"你今天有按规定休息吗？"},
+    {en:" How much does your load weigh?", zh:"你的货物总重是多少？"},
+    {en:" Are you carrying any hazardous materials?", zh:"有任何危险品吗？"},
+    {en:" Can I have your bill of lading?", zh:"请出示提货单。"},
+    {en:" Did you do pre-trip inspection today?", zh:"你今天做了行车前车检了吗？"},
+    {en:" I’ll need to inspect the vehicle. Can you step out?", zh:"我需要检查车辆，请下车。"},
+    {en:" I’m going to have you perform level II inspection.", zh:"请做二级车检。"},
+    {en:" Everything checks out, but one of your brake lights is out. You’ll need to fix that before you continue.", zh:"检查都合格，但你的一个刹车灯坏了，需要修好才能继续行驶。"},
+    {en:" I’m issuing a citation for the brake light.", zh:"我会因为刹车灯问题开一张罚单。"},
+    {en:" Alright, drive safely and have a good day.", zh:"好的，安全驾驶，祝你一天愉快。"}
   ],
 
   // 美国各州
