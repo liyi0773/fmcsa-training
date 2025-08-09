@@ -17,12 +17,12 @@
   section{margin:14px 0}
   h2{font-size:18px;margin:0 0 8px}
   .small{font-size:12px;color:var(--muted)}
-  table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:block;overflow-x:auto;white-space:nowrap}
   th,td{padding:9px;border-bottom:1px solid #1a2948}
   th{background:#0e1a31;text-align:left;font-weight:600}
   tr:last-child td{border-bottom:none}
   .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
-  /* 让表格在窄屏下不抖动 */
+  /* 列宽，避免抖动，可按需调整 */
   td:nth-child(1){width:38%}
   td:nth-child(2){width:34%}
   td:nth-child(3){width:20%}
@@ -33,7 +33,7 @@
 <header>
   <div class="wrap h-bar">
     <h1>FMCSA 英语评估训练 · 手机版</h1>
-    <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" oninput="filterTable('globalSearch','tblEssential');filterTable('globalSearch','tblStates')">
+    <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" oninput="globalFilter()">
   </div>
 </header>
 
@@ -48,6 +48,51 @@
     <p class="small">点击🔊仅朗读英文（美式英语，男声优先）。</p>
   </section>
 
+  <!-- 执法/拦检 -->
+  <section id="stop">
+    <h2>执法/拦检常用词</h2>
+    <table id="tblStop">
+      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 运营/行程 -->
+  <section id="ops">
+    <h2>运营与行程相关用语</h2>
+    <table id="tblOps">
+      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 检查与设备 -->
+  <section id="inspect">
+    <h2>检查与设备（Inspection &amp; Equipment）</h2>
+    <table id="tblInspect">
+      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 维修与部件 -->
+  <section id="maint">
+    <h2>维修与部件（Maintenance &amp; Parts）</h2>
+    <table id="tblMaint">
+      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 情景对话 -->
+  <section id="dialog">
+    <h2>拦检情景对话（Officer – Driver）</h2>
+    <table id="tblDialog">
+      <thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
   <!-- 美国各州 -->
   <section id="states">
     <h2>美国各州</h2>
@@ -58,18 +103,18 @@
   </section>
 </main>
 
-<!-- 先数据，再公共逻辑（口令 + 朗读 + 搜索） -->
+<!-- 先数据，再公共逻辑（含门禁/朗读/搜索） -->
 <script src="data.js"></script>
 <script src="common.js"></script>
 <script>
-  const safeArr = (a) => Array.isArray(a) ? a : [];
+  const safeArr = a => Array.isArray(a) ? a : [];
 
   function renderRows(tbody, rows, readColGetter) {
     tbody.innerHTML = "";
     rows.forEach(row => {
       const en = row.en || "";
-      const cn = row.cn || "";
-      const pr = row.pr || "";
+      const cn = row.cn || row.zh || "";
+      const pr = row.pr || row.hint || "";
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${en}</td>
@@ -81,10 +126,43 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    renderRows(document.querySelector('#tblEssential tbody'), safeArr(window.essentialData), r => r.en);
-    renderRows(document.querySelector('#tblStates tbody'), safeArr(window.statesData), r => r.en);
-  });
+  function renderDialogRows(tbody, dialogs){
+    tbody.innerHTML = '';
+    dialogs.forEach(d => {
+      const en = d.en || '';
+      const cn = d.zh || d.cn || '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${en}</td>
+        <td>${cn}</td>
+        <td><button class="btn" onclick="speakText('${en.replace(/'/g,"\\'")}')">🔊</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function runApp(){
+    const D = window.FMCSA_DATA || {};
+    renderRows(document.querySelector('#tblEssential tbody'), safeArr((D.vocab||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+    renderRows(document.querySelector('#tblStop tbody'),      safeArr((D.stopWords||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+    renderRows(document.querySelector('#tblOps tbody'),       safeArr((D.opsWords||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+    renderRows(document.querySelector('#tblInspect tbody'),   safeArr((D.inspectWords||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+    renderRows(document.querySelector('#tblMaint tbody'),     safeArr((D.maintWords||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+    renderDialogRows(document.querySelector('#tblDialog tbody'), safeArr(D.dialogs||[]));
+    renderRows(document.querySelector('#tblStates tbody'),    safeArr((D.states||[]).map(({en,zh,hint})=>({en,cn:zh,pr:hint}))), r=>r.en);
+  }
+
+  // 全局搜索：过滤所有表格
+  function globalFilter(){
+    const q = document.getElementById('globalSearch').value.trim().toLowerCase();
+    document.querySelectorAll('table tbody tr').forEach(tr => {
+      const match = [...tr.cells].some(td => (td.innerText||'').toLowerCase().includes(q));
+      tr.style.display = match ? '' : 'none';
+    });
+  }
+
+  // 通过门禁后再渲染
+  gatedInit(runApp);
 </script>
 </body>
 </html>
