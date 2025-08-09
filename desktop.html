@@ -157,21 +157,4 @@ function globalFilter(){
   });
 }
 
-// 导出整页为一个独立 HTML 文件（包含当前渲染结果）
-function bindExport(){
-  const btn = document.getElementById('exportBtn');
-  btn.addEventListener('click', () => {
-    const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'FMCSA-English-Desktop.html'; a.click();
-    URL.revokeObjectURL(url);
-  });
-}
 
-// 初始渲染
-initTables();
-bindExport();
-</script>
-</body>
-</html>
