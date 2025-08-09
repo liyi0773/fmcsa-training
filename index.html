@@ -578,7 +578,57 @@ document.getElementById('q').addEventListener('input', e=>{
 });
 
 // 朗读
-function speak(text){ const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; speechSynthesis.speak(u); }
+
+// ===== Unified TTS voice (fixed across devices) =====
+let _ttsVoice = null;
+const PREFERRED_VOICES = [
+  // Chrome (desktop/mobile)
+  { name: 'Google US English', lang: 'en-US' },
+  // iOS/iPadOS
+  { name: 'Samantha', lang: 'en-US' },
+  { name: 'Aaron', lang: 'en-US' },
+  { name: 'Alex', lang: 'en-US' },
+  // Edge/Windows
+  { name: 'Microsoft Aria', lang: 'en-US' },
+  { name: 'Microsoft Zira', lang: 'en-US' },
+];
+
+function pickVoice() {
+  const voices = speechSynthesis.getVoices() || [];
+  for (const pref of PREFERRED_VOICES) {
+    const v = voices.find(vc =>
+      (vc.name && vc.name.toLowerCase().includes(pref.name.toLowerCase())) ||
+      (pref.lang && vc.lang === pref.lang && vc.name && vc.name.toLowerCase().includes('english'))
+    );
+    if (v) return v;
+  }
+  return voices.find(v => v.lang === 'en-US') || voices[0] || null;
+}
+
+function ensureVoiceReady(cb){
+  const tryPick = () => {
+    if (!_ttsVoice) _ttsVoice = pickVoice();
+    if (_ttsVoice) cb(); else setTimeout(tryPick, 150);
+  };
+  if (speechSynthesis.getVoices().length) tryPick();
+  else {
+    // Some browsers need this event to fire after a tick
+    speechSynthesis.onvoiceschanged = tryPick;
+    setTimeout(tryPick, 200);
+  }
+}
+
+function speak(text){
+  ensureVoiceReady(() => {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    if (_ttsVoice) u.voice = _ttsVoice;
+    u.rate = 0.95; // slightly slower for clarity
+    u.pitch = 1.0;
+    speechSynthesis.speak(u);
+  });
+}
+
 function speakRow(btn){ const t = btn.closest('tr').cells[0].innerText; speak(t); }
 
 // 导出整页为单个 HTML 文件
