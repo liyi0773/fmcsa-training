@@ -1,17 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FMCSA English Training - Desktop</title>
-<script src="data.js"></script>
-<script src="common.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FMCSA 英语评估训练 · 桌面版</title>
+<style>
+  :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 14px}
+  .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0}
+  .nav h1{margin:0;font-size:18px}
+  .menu{display:flex;gap:10px;flex-wrap:wrap}
+  .menu a{padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#0f1a2e;text-decoration:none;color:#cfe3ff}
+  main{padding:26px 0 60px}
+  section{scroll-margin-top:80px;margin:22px 0}
+  h2{font-size:22px;margin:0 0 10px}
+  .small{font-size:12px;color:var(--muted)}
+  .tools{display:flex;gap:8px;align-items:center}
+  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#0f1b2e;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  th,td{padding:10px;border-bottom:1px solid #1a2948}
+  th{background:#0e1a31;text-align:left}
+  tr:last-child td{border-bottom:none}
+  .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
+</style>
 </head>
 <body>
-<h1>Desktop Version</h1>
-<div id="content"></div>
+<header>
+  <div class="wrap nav">
+    <h1>FMCSA 英语评估训练 · 桌面版</h1>
+    <nav class="menu">
+      <a href="#essential">必备证件</a>
+      <a href="#states">美国各州</a>
+    </nav>
+    <div class="tools">
+      <input id="globalSearch" type="search" placeholder="搜索英文/中文/读音…" oninput="filterTable('globalSearch','tblEssential');filterTable('globalSearch','tblStates')" />
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 必备证件 -->
+  <section id="essential">
+    <h2>必备证件与单据词汇</h2>
+    <table id="tblEssential">
+      <thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="small">点击🔊仅朗读英文，发音统一为美式英语（男声优先）。</p>
+  </section>
+
+  <!-- 美国各州 -->
+  <section id="states">
+    <h2>美国各州（English · 中文 · 读音提示）</h2>
+    <table id="tblStates">
+      <thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<!-- 数据与公共逻辑（务必保持此顺序：先 data.js 再 common.js） -->
+<script src="data.js"></script>
+<script src="common.js"></script>
 <script>
-renderAll();
+  // 安全取值
+  const safeArr = (a) => Array.isArray(a) ? a : [];
+
+  function renderRows(tbody, rows, readColGetter) {
+    tbody.innerHTML = "";
+    rows.forEach(row => {
+      const en = row.en || "";
+      const cn = row.cn || "";
+      const pr = row.pr || "";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${en}</td>
+        <td>${cn}</td>
+        <td class="small">${pr}</td>
+        <td><button class="btn" onclick="speakText('${(readColGetter?readColGetter(row):en).replace(/'/g, "\\'")}')">🔊</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 页面渲染
+  document.addEventListener('DOMContentLoaded', () => {
+    // 必备证件
+    const essential = safeArr(window.essentialData);
+    renderRows(document.querySelector('#tblEssential tbody'), essential, r => r.en);
+
+    // 州表：按钮只读英文州名
+    const states = safeArr(window.statesData);
+    renderRows(document.querySelector('#tblStates tbody'), states, r => r.en);
+  });
 </script>
 </body>
 </html>
