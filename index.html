@@ -1,32 +1,27 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>华人卡车协会 · FMCSA 英语评估训练（US Voice + 密码）</title>
 
-  <!-- 简易口令门（10 个密码）放在最前，确保未验证前不显示内容 -->
-  <style id="gate-style">html.gate body{display:none !important}</style>
-  <script>
-  (function(){
-    document.documentElement.classList.add('gate');
-    const PASSWORDS = new Set(['5678', '8922', '0345', '3314', '3334', '8586', '7992', '8655', '7763', '8896']);
-    const KEY = "__gate_passed__";
-    try{
-      if (sessionStorage.getItem(KEY) === '1') {
-        document.documentElement.classList.remove('gate');
-        return;
-      }
-      const input = (prompt('请输入访问口令（4位数字）：') || '').trim();
-      if (PASSWORDS.has(input)) {
-        sessionStorage.setItem(KEY, '1');
-        document.documentElement.classList.remove('gate');
-        return;
-      }
-      document.write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>访问被拒绝</title><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto;display:grid;place-items:center;height:100vh;margin:0;background:#0b1220;color:#e6eef9}.card{border:1px solid #1f2a44;border-radius:12px;padding:20px;background:#0f1b2e}</style><div class="card"><h2>访问被拒绝</h2><p>口令错误或已取消输入。</p></div>');
-      document.close();
-    }catch(e){}
-  })();
-  </script>
+<!-- 入口口令门（10 个四位数） -->
+<script>
+(function(){
+  const OK = new Set(["5678","8922","0345","3314","3334","8586","7992","8655","7763","8896"]);
+  const hide = document.createElement('style'); hide.textContent = 'html{visibility:hidden}'; document.head.appendChild(hide);
+  const p = prompt("请输入 4 位访问口令：");
+  if(!OK.has(p)){
+    alert("密码错误，无法访问！");
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:64px'>访问被拒绝</h2>";
+    });
+    throw new Error("Access Denied");
+  }
+  document.head.removeChild(hide);
+})();
+</script>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>华人卡车协会 · FMCSA 英语评估训练</title>
 <style>
   :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
   *{box-sizing:border-box}
@@ -40,18 +35,17 @@
   main{padding:26px 0 60px}
   section{scroll-margin-top:80px;margin:22px 0}
   h2{font-size:22px;margin:0 0 10px}
-  p.lead{color:var(--muted)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-  .tools{display:flex;gap:8px;align-items:center}
+  .small{font-size:12px;color:var(--muted)}
   .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
   .btn.primary{background:linear-gradient(135deg,#2563eb,#22c55e);border:none}
-  table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-  th,td{padding:10px;border-bottom:1px solid #1a2948}
+  .tools{display:flex;gap:8px;align-items:center}
+  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
+  .table-wrap{overflow-x:auto;border-radius:16px}
+  table{width:100%;min-width:620px;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  th,td{padding:10px;border-bottom:1px solid #1a2948;vertical-align:top}
   th{background:#0e1a31;text-align:left}
   tr:last-child td{border-bottom:none}
-  .small{font-size:12px;color:var(--muted)}
-  input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
+  @media (max-width:640px){ table{min-width:540px} .btn{padding:6px 10px} }
 </style>
 </head>
 <body>
@@ -77,336 +71,56 @@
 <main class="wrap">
   <section id="vocab">
     <h2>必备证件与单据词汇</h2>
-    <table id="tblVocab"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th></th></tr></thead><tbody><tr>
-      <td>License</td><td>驾照</td><td class="small">/ˈlaɪsns/ 来森斯</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Registration</td><td>（车辆）注册</td><td class="small">/ˌredʒɪˈstreɪʃən/ 瑞吉斯崔申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>CDL (Commercial Driver’s License)</td><td>商业驾驶执照</td><td class="small">C‑D‑L</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Apportioned Registration Cab Card</td><td>分摊注册随车证（IRP）</td><td class="small">啊泼申 里吉丝崔申 凯布卡德</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Insurance</td><td>保险</td><td class="small">因休伦斯</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Medical Card</td><td>体检卡/健康证</td><td class="small">麦迪可 卡德</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>ELD (Electronic Logging Device)</td><td>电子记录设备</td><td class="small">E‑L‑D</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Logbook</td><td>驾驶日志</td><td class="small">劳格布克</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Bill of Lading (BOL)</td><td>提货单</td><td class="small">比尔-莱丁</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>IFTA (International Fuel Tax Agreement)</td><td>国际燃油税协议</td><td class="small">伊芙塔</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblVocab"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
     <p class="small">IPA 音标以练准发音为主，中文提示仅便于记忆。</p>
   </section>
 
   <section id="stop">
     <h2>执法/拦检常用词</h2>
-    <table id="tblStop"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th></th></tr></thead><tbody><tr>
-      <td>Citation</td><td>罚单/传票</td><td class="small">赛泰申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Warning</td><td>警告</td><td class="small">窝宁</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Destination</td><td>目的地</td><td class="small">德斯提内申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Highway</td><td>高速公路</td><td class="small">嗨威</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Pull Over</td><td>靠边停车</td><td class="small">扑欧佛</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>International Fuel Tax Agreement</td><td>国际燃油税协议</td><td class="small">IFTA 伊芙塔</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Drug</td><td>毒品</td><td class="small">德拉格</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Narcotics</td><td>麻醉品</td><td class="small">纳卡迪克斯</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Alcohol</td><td>酒精</td><td class="small">艾尔可霍</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Firearms</td><td>火器/枪支</td><td class="small">发尔阿姆兹</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Weapons</td><td>武器</td><td class="small">威朋兹</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Gun</td><td>枪</td><td class="small">根</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Search</td><td>搜查</td><td class="small">瑟驰</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Step out</td><td>下车</td><td class="small">斯泰普 奥特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Vehicle</td><td>车辆</td><td class="small">维诶克尔</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblStop"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="ops">
     <h2>运营与行程相关用语</h2>
-    <table id="tblOps"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th></th></tr></thead><tbody><tr>
-      <td>How long</td><td>多久</td><td class="small">豪 隆</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Driving</td><td>驾驶</td><td class="small">德赖维</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Hauling</td><td>（卡车）运输</td><td class="small">霍林</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Accident</td><td>事故</td><td class="small">艾克西登特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Trip</td><td>行程</td><td class="small">趋瑞普</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Empty</td><td>空载</td><td class="small">恩普缇</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Violation</td><td>违规</td><td class="small">瓦哟雷申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Out of Service</td><td>停止服务/停运</td><td class="small">奥特 夫 瑟维斯</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Report</td><td>报告</td><td class="small">瑞波特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblOps"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="inspect">
     <h2>检查与设备（Inspection &amp; Equipment）</h2>
-    <table id="tblInspect"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th></th></tr></thead><tbody><tr>
-      <td>Annual Inspection</td><td>年度检验</td><td class="small">安纽欧 因斯佩克申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Inspection</td><td>检查</td><td class="small">因斯佩克申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Brakes</td><td>刹车</td><td class="small">布瑞克斯</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Lights</td><td>灯光</td><td class="small">赖茨</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Tires</td><td>轮胎</td><td class="small">胎尔兹</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Load</td><td>载重/货物</td><td class="small">楼德</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Overweight</td><td>超重</td><td class="small">欧佛魏特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Scale</td><td>地磅/称重站</td><td class="small">思给欧</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Ticket</td><td>罚单</td><td class="small">剔克特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Gross Weight</td><td>总重量</td><td class="small">格肉斯 魏特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Engine</td><td>发动机</td><td class="small">恩金</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Hood</td><td>引擎盖</td><td class="small">忽德</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Truck</td><td>卡车</td><td class="small">差克</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Trailer</td><td>挂车</td><td class="small">吹勒</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Hazardous Material</td><td>危险品</td><td class="small">哈泽德斯 马提瑞欧</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>GVWR</td><td>车辆总重量额定值</td><td class="small">G‑V‑W‑R</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Weigh Station</td><td>称重站</td><td class="small">魏 斯得申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Axle Weight</td><td>轴重</td><td class="small">艾克瑟 魏特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Horn</td><td>喇叭</td><td class="small">霍恩</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Bridge</td><td>桥梁</td><td class="small">布瑞吉</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Level 1 Inspection</td><td>一级检验</td><td class="small">勒伏弯 因斯佩克申</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Permit</td><td>通行证/许可</td><td class="small">珀米特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Fine</td><td>罚款</td><td class="small">fain</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Emergency Kit</td><td>应急工具包</td><td class="small">一么真西 克特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Reflector Triangle</td><td>三角反光牌</td><td class="small">瑞弗莱克特 差伊昂格</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Fire Extinguisher</td><td>灭火器</td><td class="small">发儿 以克斯汀圭舍</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Safety Vest</td><td>安全背心</td><td class="small">塞夫提 维斯特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>First Aid Kit</td><td>急救包</td><td class="small">佛斯特 埃德 克特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblInspect"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="maint">
     <h2>维修与部件（Maintenance &amp; Parts）</h2>
-    <table id="tblMaint"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th></th></tr></thead><tbody><tr>
-      <td>Mechanic</td><td>修理工/机修</td><td class="small">么开尼克</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Repair</td><td>维修</td><td class="small">瑞佩尔</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Tool</td><td>工具</td><td class="small">突欧</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Battery</td><td>电瓶</td><td class="small">拜特瑞</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Alternator</td><td>交流发电机</td><td class="small">欧特内特儿</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Starter</td><td>起动机</td><td class="small">斯达特儿</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Air line</td><td>气管</td><td class="small">艾尔 赖因</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Coolant</td><td>冷却液</td><td class="small">库冷特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Oil</td><td>机油</td><td class="small">欧油</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Oil leak</td><td>漏油</td><td class="small">欧油 利克</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Flat tire</td><td>爆胎</td><td class="small">福莱特 胎尔</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Air compressor</td><td>空压机</td><td class="small">康普瑞瑟</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Hose</td><td>软管</td><td class="small">霍兹</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Check engine</td><td>发动机故障灯</td><td class="small">切克 恩金</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Warning light</td><td>警示灯</td><td class="small">窝宁 赖特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>Radiator</td><td>散热器</td><td class="small">瑞迪耶特</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblMaint"><thead><tr><th>英文</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="dialog">
     <h2>拦检情景对话（Officer – Driver）</h2>
-    <table id="tblDialog"><thead><tr><th>英文</th><th>中文</th><th></th></tr></thead><tbody><tr>
-      <td>1. Can I have your CDL, registration, insurance, and medical card, please?</td><td>请出示你的商业驾照、车辆注册、保险、健康证。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>2. Can you show me your ELD or logbook?</td><td>请出示你的电子记录设备或驾驶日志。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>3. What are you hauling, and where are you headed?</td><td>你在运什么货物，目的地是哪里？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>4. Where did you come from today?</td><td>今天你从哪里出发？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>5. How long have you been driving today?</td><td>今天你开了多久？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>6. Have you had your break/rest time today?</td><td>你今天有按规定休息吗？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>7. How much does your load weigh?</td><td>你的货物总重是多少？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>8. Are you carrying any hazardous materials?</td><td>有任何危险品吗？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>9. Can I have your bill of lading?</td><td>请出示提货单。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>10. Did you do pre-trip inspection today?</td><td>你今天做了行车前车检了吗？</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>11. I’ll need to inspect the vehicle. Can you step out?</td><td>我需要检查车辆，请下车。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>12. I’m going to have you perform level II inspection.</td><td>请做二级车检。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>13. Everything checks out, but one of your brake lights is out. You’ll need to fix that before you continue.</td><td>检查都合格，但你的一个刹车灯坏了，需要修好才能继续行驶。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>14. I’m issuing a citation for the brake light.</td><td>我会因为刹车灯问题开一张罚单。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr><tr>
-      <td>15. Alright, drive safely and have a good day.</td><td>好的，安全驾驶，祝你一天愉快。</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
-    </tr></tbody></table>
+    <div class="table-wrap"><table id="tblDialog"><thead><tr><th>英文</th><th>中文</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="states">
     <h2>美国各州（English · 中文 · 读音提示）</h2>
-    <table id="stateTbl"><thead><tr><th>State</th><th>中文</th><th>读音提示</th></tr></thead><tbody><tr><td>Alabama</td><td>阿拉巴马州</td><td class="small">埃拉巴马</td></tr><tr><td>Alaska</td><td>阿拉斯加州</td><td class="small">阿拉斯加</td></tr><tr><td>Arizona</td><td>亚利桑那州</td><td class="small">艾瑞佐那</td></tr><tr><td>Arkansas</td><td>阿肯色州</td><td class="small">阿肯骚</td></tr><tr><td>California</td><td>加利福尼亚州</td><td class="small">加州</td></tr><tr><td>Colorado</td><td>科罗拉多州</td><td class="small">卡勒拉多</td></tr><tr><td>Connecticut</td><td>康涅狄格州</td><td class="small">可内得克特</td></tr><tr><td>Delaware</td><td>特拉华州</td><td class="small">得拉威尔</td></tr><tr><td>Florida</td><td>佛罗里达州</td><td class="small">弗罗里达</td></tr><tr><td>Georgia</td><td>乔治亚州</td><td class="small">乔治亚</td></tr><tr><td>Hawaii</td><td>夏威夷州</td><td class="small">哈外伊</td></tr><tr><td>Idaho</td><td>爱达荷州</td><td class="small">爱达厚</td></tr><tr><td>Illinois</td><td>伊利诺伊州</td><td class="small">伊利诺（s不发音）</td></tr><tr><td>Indiana</td><td>印第安纳州</td><td class="small">印迪安那</td></tr><tr><td>Iowa</td><td>爱荷华州</td><td class="small">爱欧瓦</td></tr><tr><td>Kansas</td><td>堪萨斯州</td><td class="small">看萨斯</td></tr><tr><td>Kentucky</td><td>肯塔基州</td><td class="small">肯塔基</td></tr><tr><td>Louisiana</td><td>路易斯安那州</td><td class="small">卢易斯安那</td></tr><tr><td>Maine</td><td>缅因州</td><td class="small">梅因</td></tr><tr><td>Maryland</td><td>马里兰州</td><td class="small">玛里兰</td></tr><tr><td>Massachusetts</td><td>马萨诸塞州</td><td class="small">马萨诸赛次</td></tr><tr><td>Michigan</td><td>密歇根州</td><td class="small">密西根</td></tr><tr><td>Minnesota</td><td>明尼苏达州</td><td class="small">迷尼苏达</td></tr><tr><td>Mississippi</td><td>密西西比州</td><td class="small">密西西比</td></tr><tr><td>Missouri</td><td>密苏里州</td><td class="small">米苏瑞</td></tr><tr><td>Montana</td><td>蒙大拿州</td><td class="small">蒙坦那</td></tr><tr><td>Nebraska</td><td>内布拉斯加州</td><td class="small">内布拉斯卡</td></tr><tr><td>Nevada</td><td>内华达州</td><td class="small">奈瓦达</td></tr><tr><td>New Hampshire</td><td>新罕布什尔州</td><td class="small">纽罕普夏</td></tr><tr><td>New Jersey</td><td>新泽西州</td><td class="small">纽泽西</td></tr><tr><td>New Mexico</td><td>新墨西哥州</td><td class="small">纽墨西哥</td></tr><tr><td>New York</td><td>纽约州</td><td class="small">纽约</td></tr><tr><td>North Carolina</td><td>北卡罗来纳州</td><td class="small">诺斯凯罗莱纳</td></tr><tr><td>North Dakota</td><td>北达科他州</td><td class="small">诺斯达科他</td></tr><tr><td>Ohio</td><td>俄亥俄州</td><td class="small">欧嗨俄</td></tr><tr><td>Oklahoma</td><td>俄克拉荷马州</td><td class="small">欧克拉荷马</td></tr><tr><td>Oregon</td><td>俄勒冈州</td><td class="small">奥瑞冈</td></tr><tr><td>Pennsylvania</td><td>宾夕法尼亚州</td><td class="small">宾夕法尼亚</td></tr><tr><td>Rhode Island</td><td>罗得岛州</td><td class="small">若得艾兰</td></tr><tr><td>South Carolina</td><td>南卡罗来纳州</td><td class="small">萨斯凯罗莱纳</td></tr><tr><td>South Dakota</td><td>南达科他州</td><td class="small">萨斯达科他</td></tr><tr><td>Tennessee</td><td>田纳西州</td><td class="small">田纳西</td></tr><tr><td>Texas</td><td>德克萨斯州</td><td class="small">泰克萨斯</td></tr><tr><td>Utah</td><td>犹他州</td><td class="small">优塔</td></tr><tr><td>Vermont</td><td>佛蒙特州</td><td class="small">弗蒙特</td></tr><tr><td>Virginia</td><td>弗吉尼亚州</td><td class="small">弗吉尼亚</td></tr><tr><td>Washington</td><td>华盛顿州</td><td class="small">华盛顿</td></tr><tr><td>West Virginia</td><td>西弗吉尼亚州</td><td class="small">威斯特弗吉尼亚</td></tr><tr><td>Wisconsin</td><td>威斯康星州</td><td class="small">威斯康辛</td></tr><tr><td>Wyoming</td><td>怀俄明州</td><td class="small">外俄明</td></tr></tbody></table>
+    <div class="table-wrap"><table id="stateTbl"><thead><tr><th>State</th><th>中文</th><th>读音提示</th><th>🔊</th></tr></thead><tbody></tbody></table></div>
   </section>
 </main>
 
 <script>
 // ===== 数据 =====
-const vocab = [
+const vocab=[
   {en:'License', zh:'驾照', hint:'/ˈlaɪsns/ 来森斯'},
   {en:'Registration', zh:'（车辆）注册', hint:'/ˌredʒɪˈstreɪʃən/ 瑞吉斯崔申'},
-  {en:"CDL (Commercial Driver’s License)", zh:'商业驾驶执照', hint:'C‑D‑L'},
+  {en:"CDL (Commercial Driver’s License)", zh:'商业驾驶执照', hint:'C-D-L'},
   {en:'Apportioned Registration Cab Card', zh:'分摊注册随车证（IRP）', hint:'啊泼申 里吉丝崔申 凯布卡德'},
   {en:'Insurance', zh:'保险', hint:'因休伦斯'},
   {en:'Medical Card', zh:'体检卡/健康证', hint:'麦迪可 卡德'},
-  {en:'ELD (Electronic Logging Device)', zh:'电子记录设备', hint:'E‑L‑D'},
+  {en:'ELD (Electronic Logging Device)', zh:'电子记录设备', hint:'E-L-D'},
   {en:'Logbook', zh:'驾驶日志', hint:'劳格布克'},
   {en:'Bill of Lading (BOL)', zh:'提货单', hint:'比尔-莱丁'},
   {en:'IFTA (International Fuel Tax Agreement)', zh:'国际燃油税协议', hint:'伊芙塔'}
 ];
-
-const stopWords = [
+const stopWords=[
   {en:'Citation', zh:'罚单/传票', hint:'赛泰申'},
   {en:'Warning', zh:'警告', hint:'窝宁'},
   {en:'Destination', zh:'目的地', hint:'德斯提内申'},
@@ -423,8 +137,7 @@ const stopWords = [
   {en:'Step out', zh:'下车', hint:'斯泰普 奥特'},
   {en:'Vehicle', zh:'车辆', hint:'维诶克尔'}
 ];
-
-const opsWords = [
+const opsWords=[
   {en:'How long', zh:'多久', hint:'豪 隆'},
   {en:'Driving', zh:'驾驶', hint:'德赖维'},
   {en:'Hauling', zh:'（卡车）运输', hint:'霍林'},
@@ -435,8 +148,7 @@ const opsWords = [
   {en:'Out of Service', zh:'停止服务/停运', hint:'奥特 夫 瑟维斯'},
   {en:'Report', zh:'报告', hint:'瑞波特'}
 ];
-
-const inspectWords = [
+const inspectWords=[
   {en:'Annual Inspection', zh:'年度检验', hint:'安纽欧 因斯佩克申'},
   {en:'Inspection', zh:'检查', hint:'因斯佩克申'},
   {en:'Brakes', zh:'刹车', hint:'布瑞克斯'},
@@ -452,13 +164,13 @@ const inspectWords = [
   {en:'Truck', zh:'卡车', hint:'差克'},
   {en:'Trailer', zh:'挂车', hint:'吹勒'},
   {en:'Hazardous Material', zh:'危险品', hint:'哈泽德斯 马提瑞欧'},
-  {en:'GVWR', zh:'车辆总重量额定值', hint:'G‑V‑W‑R'},
+  {en:'GVWR', zh:'车辆总重量额定值', hint:'G-V-W-R'},
   {en:'Weigh Station', zh:'称重站', hint:'魏 斯得申'},
   {en:'Axle Weight', zh:'轴重', hint:'艾克瑟 魏特'},
   {en:'Horn', zh:'喇叭', hint:'霍恩'},
   {en:'Bridge', zh:'桥梁', hint:'布瑞吉'},
   {en:'Level 1 Inspection', zh:'一级检验', hint:'勒伏弯 因斯佩克申'},
-  {en:'Permit', zh:'通行证/许可', hint:'珀米特'},
+  {en:'Permit', zh:'通行证/许可', zh2:'', hint:'珀米特'},
   {en:'Fine', zh:'罚款', hint:'fain'},
   {en:'Emergency Kit', zh:'应急工具包', hint:'一么真西 克特'},
   {en:'Reflector Triangle', zh:'三角反光牌', hint:'瑞弗莱克特 差伊昂格'},
@@ -466,8 +178,7 @@ const inspectWords = [
   {en:'Safety Vest', zh:'安全背心', hint:'塞夫提 维斯特'},
   {en:'First Aid Kit', zh:'急救包', hint:'佛斯特 埃德 克特'}
 ];
-
-const maintWords = [
+const maintWords=[
   {en:'Mechanic', zh:'修理工/机修', hint:'么开尼克'},
   {en:'Repair', zh:'维修', hint:'瑞佩尔'},
   {en:'Tool', zh:'工具', hint:'突欧'},
@@ -485,8 +196,7 @@ const maintWords = [
   {en:'Warning light', zh:'警示灯', hint:'窝宁 赖特'},
   {en:'Radiator', zh:'散热器', hint:'瑞迪耶特'}
 ];
-
-const dialogs = [
+const dialogs=[
   {en:"1. Can I have your CDL, registration, insurance, and medical card, please?", zh:"请出示你的商业驾照、车辆注册、保险、健康证。"},
   {en:"2. Can you show me your ELD or logbook?", zh:"请出示你的电子记录设备或驾驶日志。"},
   {en:"3. What are you hauling, and where are you headed?", zh:"你在运什么货物，目的地是哪里？"},
@@ -503,8 +213,7 @@ const dialogs = [
   {en:"14. I’m issuing a citation for the brake light.", zh:"我会因为刹车灯问题开一张罚单。"},
   {en:"15. Alright, drive safely and have a good day.", zh:"好的，安全驾驶，祝你一天愉快。"}
 ];
-
-const states = [
+const states=[
   {en:'Alabama', zh:'阿拉巴马州', hint:'埃拉巴马'},
   {en:'Alaska', zh:'阿拉斯加州', hint:'阿拉斯加'},
   {en:'Arizona', zh:'亚利桑那州', hint:'艾瑞佐那'},
@@ -562,13 +271,13 @@ function renderTable(id, data){
   const tbody = document.querySelector(id+' tbody');
   tbody.innerHTML = '';
   data.forEach(row=>{
+    const safeEn = (row.en||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     tbody.insertAdjacentHTML('beforeend',`<tr>
       <td>${row.en}</td><td>${row.zh||''}</td><td class="small">${row.hint||''}</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
+      <td><button class="btn" onclick="speakText('${safeEn}')">🔊</button></td>
     </tr>`);
   });
 }
-
 renderTable('#tblVocab', vocab);
 renderTable('#tblStop', stopWords);
 renderTable('#tblOps', opsWords);
@@ -579,18 +288,23 @@ renderTable('#tblMaint', maintWords);
 (function(){
   const tb = document.querySelector('#tblDialog tbody');
   dialogs.forEach(d=>{
+    const t = d.en.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     tb.insertAdjacentHTML('beforeend', `<tr>
       <td>${d.en}</td><td>${d.zh}</td>
-      <td><button class="btn" onclick="speakRow(this)">🔊</button></td>
+      <td><button class="btn" onclick="speakText('${t}')">🔊</button></td>
     </tr>`)
   })
 })();
 
-// 州
+// 州（只读英文）
 (function(){
   const tb = document.querySelector('#stateTbl tbody');
   states.forEach(s=>{
-    tb.insertAdjacentHTML('beforeend', `<tr><td>${s.en}</td><td>${s.zh}</td><td class="small">${s.hint||''}</td></tr>`);
+    const t = s.en.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    tb.insertAdjacentHTML('beforeend', `<tr>
+      <td>${s.en}</td><td>${s.zh}</td><td class="small">${s.hint||''}</td>
+      <td><button class="btn" onclick="speakText('${t}')">🔊</button></td>
+    </tr>`);
   })
 })();
 
@@ -602,9 +316,34 @@ document.getElementById('q').addEventListener('input', e=>{
   });
 });
 
-// 朗读
-function speak(text){ const u = new SpeechSynthesisUtterance(text); u.lang='en-US'; speechSynthesis.speak(u); }
-function speakRow(btn){ const t = btn.closest('tr').cells[0].innerText; speak(t); }
+// ===== 固定美式英文人声 =====
+let _ttsVoice = null;
+const PREFERRED_VOICES = [
+  { name: 'Google US English', lang: 'en-US' },
+  { name: 'Samantha', lang: 'en-US' }, { name: 'Aaron', lang: 'en-US' }, { name: 'Alex', lang: 'en-US' },
+  { name: 'Microsoft Aria', lang: 'en-US' }, { name: 'Microsoft Zira', lang: 'en-US' },
+];
+function pickVoice(){
+  const voices = speechSynthesis.getVoices() || [];
+  for(const pref of PREFERRED_VOICES){
+    const v = voices.find(vc => (vc.name && vc.name.toLowerCase().includes(pref.name.toLowerCase())) ||
+      (pref.lang && vc.lang === pref.lang && vc.name && vc.name.toLowerCase().includes('english')));
+    if(v) return v;
+  }
+  return voices.find(v => v.lang === 'en-US') || voices[0] || null;
+}
+function ensureVoice(cb){
+  const tryPick = () => { if(!_ttsVoice) _ttsVoice = pickVoice(); if(_ttsVoice) cb(); else setTimeout(tryPick,150); };
+  if (speechSynthesis.getVoices().length) tryPick();
+  else { speechSynthesis.onvoiceschanged = tryPick; setTimeout(tryPick,200); }
+}
+function speakText(text){
+  ensureVoice(()=>{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; if(_ttsVoice) u.voice=_ttsVoice; u.rate=0.95; u.pitch=1.0;
+    speechSynthesis.speak(u);
+  });
+}
 
 // 导出整页为单个 HTML 文件
 document.getElementById('exportBtn').addEventListener('click', ()=>{
@@ -614,6 +353,5 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   URL.revokeObjectURL(url);
 });
 </script>
-
-
-</body></html>
+</body>
+</html>
