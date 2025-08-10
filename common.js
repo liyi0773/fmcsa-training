@@ -4,7 +4,7 @@
 let _ttsReady = false;
 let _voiceCache = null;
 
-// 优先顺序（不同系统/浏览器常见英文男声/自然声音）
+// 常见英文男声/自然声音（用于自动挑选兜底）
 const PREFERRED_VOICES = [
   // Windows / Edge
   { name: 'Microsoft Guy', lang: 'en-US' },
@@ -19,17 +19,26 @@ const PREFERRED_VOICES = [
   { name: 'Google US English', lang: 'en-US' },
 ];
 
-// 异步确保 voices 就绪
+/* -------- 更稳的 ensureVoicesReady：轮询 + onvoiceschanged 双保险 -------- */
 function ensureVoicesReady(cb) {
   if (!('speechSynthesis' in window)) { cb(false); return; }
-  const tryPick = () => {
+
+  let tries = 0;
+  const maxTries = 20;      // 20 次 * 200ms ≈ 4 秒
+  const interval = 200;
+
+  const tick = () => {
     const voices = window.speechSynthesis.getVoices() || [];
-    if (voices.length) { _ttsReady = true; cb(true); }
-    else { setTimeout(tryPick, 150); }
+    if (voices.length) { _ttsReady = true; cb(true); return; }
+    if (tries++ >= maxTries) { cb(false); return; }
+    setTimeout(tick, interval);
   };
-  // 某些环境必须监听该事件
-  window.speechSynthesis.onvoiceschanged = () => tryPick();
-  tryPick();
+
+  try { window.speechSynthesis.getVoices(); } catch {}
+  if (typeof window.speechSynthesis.onvoiceschanged !== 'function') {
+    window.speechSynthesis.onvoiceschanged = tick;
+  }
+  tick();
 }
 
 /** ========= TTS 用户可选：人声 + 语速（本地保存） ========= */
@@ -45,7 +54,6 @@ function saveTtsSettings() {
   localStorage.setItem(TTS_SETTINGS_KEY, JSON.stringify(TTS_SETTINGS));
 }
 
-// 按语言排序（优先 en-US）
 function getSortedVoices() {
   const voices = (window.speechSynthesis?.getVoices() || []).slice();
   const en = voices.filter(v => /en-US/i.test(v.lang));
@@ -66,23 +74,30 @@ function wireTtsControls(selId, rateId, outId) {
   const out  = outId ? document.getElementById(outId) : null;
   if (!sel && !rate) return;
 
-  const populate = () => {
+  const populate = (ok) => {
     if (!sel) return;
-    const voices = getSortedVoices();
+    const voices = (ok ? getSortedVoices() : []);
     sel.innerHTML = '';
-    if (!voices.length) {
-      sel.innerHTML = '<option>（语音加载中…）</option>';
+
+    if (!ok || !voices.length) {
+      const opt = document.createElement('option');
+      opt.textContent = '未检测到系统语音';
+      sel.appendChild(opt);
+      sel.disabled = true;
       return;
     }
+
+    sel.disabled = false;
     voices.forEach(v => {
       const opt = document.createElement('option');
       opt.value = v.name;
       opt.textContent = `${v.name} (${v.lang})`;
       sel.appendChild(opt);
     });
+
     if (TTS_SETTINGS.voice) {
       const has = voices.some(v => v.name === TTS_SETTINGS.voice);
-      sel.value = has ? TTS_SETTINGS.voice : voices[0]?.name || '';
+      sel.value = has ? TTS_SETTINGS.voice : (voices[0]?.name || '');
     } else {
       sel.value = voices[0]?.name || '';
     }
@@ -90,19 +105,27 @@ function wireTtsControls(selId, rateId, outId) {
     saveTtsSettings();
   };
 
-  ensureVoicesReady(populate);
+  // 先显示占位，再异步填充
+  if (sel) {
+    sel.innerHTML = '<option>加载语音中…</option>';
+    sel.disabled = true;
+  }
+
+  ensureVoicesReady((ok) => {
+    populate(ok);
+    // 再补一次，处理极慢加载场景
+    setTimeout(() => populate(true), 1000);
+  });
 
   if (sel) {
     sel.addEventListener('change', () => {
       TTS_SETTINGS.voice = sel.value || null;
       saveTtsSettings();
-      _voiceCache = null; // 切换后重新挑选
-      ensureVoicesReady(()=>{});
+      _voiceCache = null;
     });
   }
 
   if (rate) {
-    // 初值
     if (typeof TTS_SETTINGS.rate === 'number') rate.value = String(TTS_SETTINGS.rate);
     if (out) out.textContent = rate.value;
     rate.addEventListener('input', () => {
@@ -118,7 +141,7 @@ function pickVoice() {
   const voices = window.speechSynthesis.getVoices() || [];
   if (!voices.length) return null;
 
-  // >>> 优先使用用户选择
+  // 优先使用用户选择
   if (TTS_SETTINGS.voice) {
     const chosen = voices.find(v => v.name === TTS_SETTINGS.voice);
     if (chosen) { _voiceCache = chosen; return chosen; }
@@ -149,7 +172,7 @@ function speakText(text) {
     alert('您的浏览器不支持语音朗读功能。');
     return;
   }
-  ensureVoicesReady(() => {
+  ensureVoicesReady((ok) => {
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang  = 'en-US';
     utter.rate  = (typeof TTS_SETTINGS.rate === 'number') ? TTS_SETTINGS.rate : 0.95;
@@ -169,9 +192,7 @@ function stopSpeaking() {
   }
 }
 
-/** ========= 表格过滤 =========
- * 支持英文、中文、读音三列模糊匹配
- */
+/** ========= 表格过滤（兼容桌面与移动） ========= */
 function filterTable(inputId, tableId) {
   const input = document.getElementById(inputId);
   const table = document.getElementById(tableId);
