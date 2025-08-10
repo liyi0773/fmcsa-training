@@ -8,7 +8,7 @@
   <script src="data.js"></script>
   <script src="common.js"></script>
   <style>
-    :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9;--accent:#22c55e}
+    :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9}
     *{box-sizing:border-box}
     body{margin:0;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     header{position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
@@ -21,9 +21,12 @@
     section{scroll-margin-top:80px;margin:22px 0}
     h2{font-size:22px;margin:0 0 10px}
     .small{font-size:12px;color:var(--muted)}
-    .tools{display:flex;gap:8px;align-items:center}
-    input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px}
-    .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px 12px;border-radius:10px;min-width:220px}
+    .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer}
+    select.btn{padding-right:28px}
+    .slider-wrap{display:flex;align-items:center;gap:6px}
+    .slider-wrap input[type="range"]{width:140px}
     table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
     th,td{padding:10px;border-bottom:1px solid #1a2948}
     th{background:#0e1a31;text-align:left}
@@ -47,6 +50,12 @@
     </nav>
     <div class="tools">
       <input id="q" type="search" placeholder="搜索英文 / 中文 / 读音…" oninput="globalFilter()" aria-label="搜索所有表格" />
+      <!-- 新增：人声选择 + 语速 -->
+      <select id="voiceSel" class="btn" aria-label="朗读人声"><option>加载语音中…</option></select>
+      <div class="slider-wrap">
+        <label class="small" for="rateCtl">速度 <span id="rateOut">0.95</span></label>
+        <input id="rateCtl" type="range" min="0.6" max="1.4" step="0.05" value="0.95" />
+      </div>
     </div>
   </div>
 </header>
@@ -152,6 +161,11 @@ function globalFilter(){
     tr.style.display = match ? '' : 'none';
   });
 }
+
+// 绑定 TTS 控件（页面加载即可）
+document.addEventListener('DOMContentLoaded', () => {
+  wireTtsControls('voiceSel', 'rateCtl', 'rateOut');
+});
 
 // 通过门禁后再渲染
 gatedInit(initTables);
