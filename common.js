@@ -32,11 +32,97 @@ function ensureVoicesReady(cb) {
   tryPick();
 }
 
+/** ========= TTS 用户可选：人声 + 语速（本地保存） ========= */
+const TTS_SETTINGS_KEY = 'fmcsa_tts_settings_v1';
+let   TTS_SETTINGS = { voice: null, rate: 0.95, pitch: 1.0 };
+
+try {
+  const saved = JSON.parse(localStorage.getItem(TTS_SETTINGS_KEY) || '{}');
+  TTS_SETTINGS = { ...TTS_SETTINGS, ...saved };
+} catch {}
+
+function saveTtsSettings() {
+  localStorage.setItem(TTS_SETTINGS_KEY, JSON.stringify(TTS_SETTINGS));
+}
+
+// 按语言排序（优先 en-US）
+function getSortedVoices() {
+  const voices = (window.speechSynthesis?.getVoices() || []).slice();
+  const en = voices.filter(v => /en-US/i.test(v.lang));
+  const rest = voices.filter(v => !/en-US/i.test(v.lang));
+  const byName = (a,b)=> (a.name||'').localeCompare(b.name||'');
+  return [...en.sort(byName), ...rest.sort(byName)];
+}
+
+/**
+ * 绑定控件：语音 <select> + 速度 <input type=range>
+ * @param {string} selId  语音选择器 id
+ * @param {string} rateId 速度滑块 id
+ * @param {string} outId  速度显示 span id（可选）
+ */
+function wireTtsControls(selId, rateId, outId) {
+  const sel  = document.getElementById(selId);
+  const rate = document.getElementById(rateId);
+  const out  = outId ? document.getElementById(outId) : null;
+  if (!sel && !rate) return;
+
+  const populate = () => {
+    if (!sel) return;
+    const voices = getSortedVoices();
+    sel.innerHTML = '';
+    if (!voices.length) {
+      sel.innerHTML = '<option>（语音加载中…）</option>';
+      return;
+    }
+    voices.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.name;
+      opt.textContent = `${v.name} (${v.lang})`;
+      sel.appendChild(opt);
+    });
+    if (TTS_SETTINGS.voice) {
+      const has = voices.some(v => v.name === TTS_SETTINGS.voice);
+      sel.value = has ? TTS_SETTINGS.voice : voices[0]?.name || '';
+    } else {
+      sel.value = voices[0]?.name || '';
+    }
+    TTS_SETTINGS.voice = sel.value || null;
+    saveTtsSettings();
+  };
+
+  ensureVoicesReady(populate);
+
+  if (sel) {
+    sel.addEventListener('change', () => {
+      TTS_SETTINGS.voice = sel.value || null;
+      saveTtsSettings();
+      _voiceCache = null; // 切换后重新挑选
+      ensureVoicesReady(()=>{});
+    });
+  }
+
+  if (rate) {
+    // 初值
+    if (typeof TTS_SETTINGS.rate === 'number') rate.value = String(TTS_SETTINGS.rate);
+    if (out) out.textContent = rate.value;
+    rate.addEventListener('input', () => {
+      TTS_SETTINGS.rate = Number(rate.value);
+      if (out) out.textContent = rate.value;
+      saveTtsSettings();
+    });
+  }
+}
+
 function pickVoice() {
   if (_voiceCache) return _voiceCache;
   const voices = window.speechSynthesis.getVoices() || [];
   if (!voices.length) return null;
 
+  // >>> 优先使用用户选择
+  if (TTS_SETTINGS.voice) {
+    const chosen = voices.find(v => v.name === TTS_SETTINGS.voice);
+    if (chosen) { _voiceCache = chosen; return chosen; }
+  }
   // 1) 从优先列表里找匹配
   for (const pref of PREFERRED_VOICES) {
     const v = voices.find(vc =>
@@ -65,9 +151,9 @@ function speakText(text) {
   }
   ensureVoicesReady(() => {
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = 0.95;  // 略慢更清晰
-    utter.pitch = 1.0;
+    utter.lang  = 'en-US';
+    utter.rate  = (typeof TTS_SETTINGS.rate === 'number') ? TTS_SETTINGS.rate : 0.95;
+    utter.pitch = (typeof TTS_SETTINGS.pitch === 'number') ? TTS_SETTINGS.pitch : 1.0;
     const v = pickVoice();
     if (v) utter.voice = v;
     // 如果正在读，先清掉队列再读
@@ -112,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
    ======================================================================= */
 const PIN_SESSION_KEY = 'fmcsa_gate_hashes_v1';
 
-// 固定的 10 个 PIN（按你提供的列表）
+// 固定的 10 个 PIN（你提供的列表）
 const FIXED_PINS = ['5678','8922','0345','3314','3334','8586','7992','8655','7763','8896'];
 
 // 计算 SHA-256 十六进制
