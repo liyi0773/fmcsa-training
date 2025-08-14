@@ -1,79 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>华人卡车协会英语评估训练 · 手机版</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>FMCSA 英语评估训练 · 移动版</title>
+  <meta name="robots" content="noindex"/>
+  <style>
+    :root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9}
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:linear-gradient(180deg,#0b1220,#0b1220 60%,#0d1528);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+    .wrap{max-width:860px;margin:0 auto;padding:0 14px}
+    .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 0}
+    h1{margin:0;font-size:18px;flex:1 0 100%}
+    input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:10px;border-radius:12px;min-width:160px}
+    .btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;touch-action:manipulation}
+    .btn:active{transform:scale(.98)}
+    select.btn{padding-right:28px}
+    .slider{display:flex;align-items:center;gap:6px}
+    .slider input[type="range"]{width:120px}
+    main{padding:16px 0 72px}
+    section{margin:16px 0}
+    h2{font-size:18px;margin:0 0 10px}
+    .small{font-size:12px;color:var(--muted)}
 
-<style>
-:root{--bg:#0b1220;--card:#0f1b2e;--line:#1f2a44;--text:#e6eef9;--muted:#9fb1c9}
-*{box-sizing:border-box}
-body{margin:0;background:#0b1220;color:var(--text);font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    /* 卡片式列表（移动友好） */
+    .list{display:grid;gap:10px}
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:14px;
+      padding:12px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center
+    }
+    .en{font-weight:700}
+    .meta{grid-column:1 / -1;color:var(--muted);font-size:13px;display:flex;gap:12px;flex-wrap:wrap}
+    .zh,.pr{word-break:break-word;overflow-wrap:anywhere}
 
-header{position:sticky;top:0;z-index:10;background:#0f1b2e;border-bottom:1px solid var(--line)}
-.wrap{max-width:800px;margin:0 auto;padding:0 12px}
-.h-bar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 0}
-h1{font-size:16px;margin:0;flex:1 0 100%}
-input[type="search"]{flex:1;border:1px solid var(--line);background:#0b1629;color:var(--text);padding:8px;border-radius:8px;min-width:140px}
-select.btn{padding:6px 8px;background:#10213a;border:1px solid var(--line);color:var(--text);border-radius:8px}
-.slider-wrap{display:flex;align-items:center;gap:4px}
-.slider-wrap input[type="range"]{width:100px}
-
-main{padding:14px 0 40px}
-section{margin:14px 0}
-h2{font-size:17px;margin:0 0 6px}
-.small{font-size:12px;color:var(--muted)}
-
-/* 卡片样式 */
-.list{display:grid;gap:10px}
-.card{
-  background:#0f1b2e;border:1px solid var(--line);border-radius:14px;
-  padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center
-}
-.en{font-weight:700}
-.meta{grid-column:1 / -1;color:var(--muted);font-size:13px;display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:1px solid var(--line);background:#10213a;color:var(--text);padding:6px 10px;border-radius:10px;cursor:pointer}
-
-/* 文本换行，杜绝横向滚动 */
-.en,.zh,.pr{word-break:break-word;overflow-wrap:anywhere}
-
-/* 表格样式 */
-table{width:100%;border-collapse:collapse;background:#0f1b2e;border:1px solid var(--line);border-radius:12px;overflow:hidden;table-layout:auto;word-break:break-word}
-th,td{padding:8px;border-bottom:1px solid #1a2948;vertical-align:top}
-th{background:#0e1a31;text-align:left;font-weight:600}
-tr:last-child td{border-bottom:none}
-tbody td:last-child{text-align:center;white-space:nowrap}
-.btn.table-btn{padding:4px 8px;border-radius:8px}
-.hint{color:var(--muted);font-size:12px}
-</style>
+    /* 微交互 */
+    .card:hover{outline:1px solid rgba(255,255,255,.05)}
+    .btn:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+  </style>
 </head>
-
 <body>
 <header>
-  <div class="wrap h-bar">
-    <h1>华人卡车协会英语评估训练 · 手机版</h1>
-    <!-- 统一一个搜索框 -->
-    <input id="globalSearch" type="search" placeholder="搜索英文 / 中文 / 读音…" aria-label="搜索（卡片+表格）">
-    <select id="voiceSel" class="btn" aria-label="语音选择"><option>加载语音中…</option></select>
-    <div class="slider-wrap">
-      <label class="small" for="rateCtl">速 <span id="rateOut">0.95</span></label>
+  <div class="wrap bar">
+    <h1>FMCSA 英语评估训练 · 移动版</h1>
+    <input id="q" type="search" placeholder="搜索英文 / 中文 / 读音…" aria-label="搜索全部内容"/>
+    <select id="voiceSel" class="btn" aria-label="朗读人声"><option>加载语音中…</option></select>
+    <div class="slider">
+      <label class="small" for="rateCtl">速度 <span id="rateOut">0.95</span></label>
       <input id="rateCtl" type="range" min="0.6" max="1.4" step="0.05" value="0.95"/>
+      <button id="stopBtn" class="btn" title="停止朗读" aria-label="停止朗读">⏹</button>
     </div>
   </div>
 </header>
 
 <main class="wrap">
-  <section id="essential">
-    <h2>必备证件与单据词汇</h2>
-    <div id="listEssential" class="list"></div>
-    <p class="small">点击 🔊 朗读英文（美式英语，男声优先）。</p>
-
-    <!-- 表格版（你的需求里保留） -->
+  <section id="vocab">
     <h2>必备证件与单据</h2>
-    <table id="tblEssential" aria-label="必备证件与单据表">
-      <thead><tr><th>英文</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <div id="listVocab" class="list"></div>
+    <p class="small">提示：点击 🔊 按钮朗读英文（美式英语，男声优先；可在上方选择人声与语速）。</p>
   </section>
 
   <section id="stop">
@@ -102,28 +86,24 @@ tbody td:last-child{text-align:center;white-space:nowrap}
   </section>
 
   <section id="states">
-    <h2>美国各州</h2>
+    <h2>美国各州（English · 中文 · 读音提示）</h2>
     <div id="listStates" class="list"></div>
-
-    <!-- 表格版（保留） -->
-    <table id="tblStates" aria-label="美国各州表">
-      <thead><tr><th>State</th><th>中文</th><th>读音</th><th>🔊</th></tr></thead>
-      <tbody></tbody>
-    </table>
   </section>
 </main>
 
-<!-- 数据与公共逻辑（含门禁/朗读） -->
+<!-- 依赖：与本文件同目录 -->
 <script src="data.js"></script>
 <script src="common.js"></script>
 <script>
-/* ===== 基础工具 ===== */
+/* ===== DOM 工具 ===== */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
 const safeArr = a => Array.isArray(a) ? a : [];
 
-/* 卡片工厂（安全 DOM 渲染） */
-function makeCard({en="", zh="", hint=""}) {
-  const div = document.createElement('div');
-  div.className = 'card';
+/* ===== 组件：卡片工厂（安全渲染） ===== */
+function makeWordCard({en="", zh="", hint=""}){
+  const card = document.createElement('div');
+  card.className = 'card';
 
   const title = document.createElement('div');
   title.className = 'en';
@@ -137,27 +117,20 @@ function makeCard({en="", zh="", hint=""}) {
 
   const meta = document.createElement('div');
   meta.className = 'meta';
-  const zhSpan = document.createElement('span');
-  zhSpan.className = 'zh';
-  zhSpan.textContent = `中文：${zh || '—'}`;
-  const prSpan = document.createElement('span');
-  prSpan.className = 'pr';
-  prSpan.textContent = `读音：${hint || '—'}`;
-  meta.appendChild(zhSpan);
-  meta.appendChild(prSpan);
+  const zhSpan = document.createElement('span'); zhSpan.className='zh'; zhSpan.textContent = `中文：${zh || '—'}`;
+  const prSpan = document.createElement('span'); prSpan.className='pr'; prSpan.textContent = `读音：${hint || '—'}`;
+  meta.appendChild(zhSpan); meta.appendChild(prSpan);
 
-  div.appendChild(title);
-  div.appendChild(btn);
-  div.appendChild(meta);
+  card.appendChild(title); card.appendChild(btn); card.appendChild(meta);
 
-  // 统一搜索缓存
-  div.dataset.search = [en, zh, hint].join(' ').toLowerCase();
-  return div;
+  // 供搜索使用
+  card.dataset.search = [en, zh, hint].join(' ').toLowerCase();
+  return card;
 }
 
-function makeDialogCard({en="", zh=""}) {
-  const div = document.createElement('div');
-  div.className = 'card';
+function makeDialogCard({en="", zh=""}){
+  const card = document.createElement('div');
+  card.className = 'card';
 
   const title = document.createElement('div');
   title.className = 'en';
@@ -171,108 +144,64 @@ function makeDialogCard({en="", zh=""}) {
 
   const meta = document.createElement('div');
   meta.className = 'meta';
-  const zhSpan = document.createElement('span');
-  zhSpan.className = 'zh';
-  zhSpan.textContent = `中文：${zh || '—'}`;
+  const zhSpan = document.createElement('span'); zhSpan.className='zh'; zhSpan.textContent = `中文：${zh || '—'}`;
   meta.appendChild(zhSpan);
 
-  div.appendChild(title);
-  div.appendChild(btn);
-  div.appendChild(meta);
+  card.appendChild(title); card.appendChild(btn); card.appendChild(meta);
 
-  div.dataset.search = [en, zh].join(' ').toLowerCase();
-  return div;
+  card.dataset.search = [en, zh].join(' ').toLowerCase();
+  return card;
 }
 
-/* 渲染列表 */
-function renderList(container, rows) {
-  container.innerHTML = '';
-  safeArr(rows).forEach(r => container.appendChild(makeCard(r)));
-}
-
-/* ===== 表格安全渲染（使用 essentialData/statesData 的 cn/pr 字段） ===== */
-function renderRows(tbody, rows){
-  tbody.innerHTML = '';
+/* ===== 渲染每个分区 ===== */
+function renderList(containerId, rows, dialog=false){
+  const box = document.getElementById(containerId);
+  box.innerHTML = '';
   safeArr(rows).forEach(r => {
-    const tr = document.createElement('tr');
-
-    const tdEn = document.createElement('td'); tdEn.textContent = r.en || '';
-    const tdCn = document.createElement('td'); tdCn.textContent = r.cn || r.zh || '';
-    const tdPr = document.createElement('td'); tdPr.className = 'hint'; tdPr.textContent = r.pr || r.hint || '';
-
-    const tdBtn = document.createElement('td');
-    const btn = document.createElement('button');
-    btn.className = 'btn table-btn';
-    btn.textContent = '🔊';
-    btn.setAttribute('aria-label', `朗读 ${r.en || ''}`);
-    btn.addEventListener('click', () => speakText(r.en || ''));
-    tdBtn.appendChild(btn);
-
-    tr.appendChild(tdEn);
-    tr.appendChild(tdCn);
-    tr.appendChild(tdPr);
-    tr.appendChild(tdBtn);
-    tbody.appendChild(tr);
+    box.appendChild(dialog ? makeDialogCard(r) : makeWordCard(r));
   });
 }
 
-function initTables(){
-  renderRows(document.querySelector('#tblEssential tbody'), safeArr(window.essentialData));
-  renderRows(document.querySelector('#tblStates tbody'),    safeArr(window.statesData));
+/* ===== 全局搜索（去抖 + 卡片过滤） ===== */
+let _t=null;
+function applyFilter(){
+  const q = ($('#q').value || '').trim().toLowerCase();
+  $$('.card').forEach(c => {
+    const ok = !q || (c.dataset.search||'').includes(q);
+    c.style.display = ok ? '' : 'none';
+  });
 }
+function globalFilter(){ clearTimeout(_t); _t = setTimeout(applyFilter, 120); }
 
-/* ===== 卡片初始化 ===== */
-function runApp(){
+/* ===== 入口：门禁通过后渲染整页 ===== */
+function boot(){
   const D = window.FMCSA_DATA || {};
-  renderList(document.getElementById('listEssential'), safeArr(D.vocab));
-  renderList(document.getElementById('listStop'),      safeArr(D.stopWords));
-  renderList(document.getElementById('listOps'),       safeArr(D.opsWords));
-  renderList(document.getElementById('listInspect'),   safeArr(D.inspectWords));
-  renderList(document.getElementById('listMaint'),     safeArr(D.maintWords));
-
-  const dialogBox = document.getElementById('listDialog');
-  dialogBox.innerHTML = '';
-  safeArr(D.dialogs).forEach(d => dialogBox.appendChild(makeDialogCard(d)));
-
-  renderList(document.getElementById('listStates'),    safeArr(D.states));
+  renderList('listVocab',   D.vocab);
+  renderList('listStop',    D.stopWords);
+  renderList('listOps',     D.opsWords);
+  renderList('listInspect', D.inspectWords);
+  renderList('listMaint',   D.maintWords);
+  renderList('listDialog',  D.dialogs, true);
+  renderList('listStates',  D.states);
 }
 
-/* ===== 统一搜索（一个输入 → 过滤卡片 + 表格） ===== */
-function unifyFilter(){
-  const q = (document.getElementById('globalSearch').value || '').trim().toLowerCase();
-
-  // 卡片
-  document.querySelectorAll('.card').forEach(card => {
-    const ok = !q || (card.dataset.search || '').includes(q);
-    card.style.display = ok ? '' : 'none';
-  });
-
-  // 表格
-  document.querySelectorAll('table tbody tr').forEach(tr => {
-    const match = Array.from(tr.cells).some(td => (td.textContent||'').toLowerCase().includes(q));
-    tr.style.display = match ? '' : 'none';
-  });
-}
-
-/* ===== 启动顺序（一次性门禁） ===== */
-function bootAll(){
-  runApp();
-  initTables();
-}
-gatedInit(bootAll); // 通过门禁后统一启动
-
-/* ===== 事件与控件 ===== */
+/* ===== 初始化控件 & 事件 ===== */
 document.addEventListener('DOMContentLoaded', () => {
   // TTS 控件（依赖 common.js）
   wireTtsControls('voiceSel','rateCtl','rateOut');
 
-  // 搜索事件
-  const gs = document.getElementById('globalSearch');
-  gs.addEventListener('input', unifyFilter);
-  gs.addEventListener('keydown', e => {
-    if (e.key === 'Escape'){ gs.value=''; unifyFilter(); }
+  // 停止朗读按钮
+  $('#stopBtn').addEventListener('click', () => stopSpeaking());
+
+  // 搜索
+  $('#q').addEventListener('input', globalFilter);
+  $('#q').addEventListener('keydown', e => {
+    if (e.key === 'Escape'){ e.target.value=''; applyFilter(); }
   });
 });
+
+/* ===== 通过门禁后再启动 ===== */
+gatedInit(boot);
 </script>
 </body>
 </html>
